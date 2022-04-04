@@ -228,7 +228,6 @@ input[type="text"], input[type="number"] {
 
 /*#region Footer */
 .footer {
-    position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
@@ -359,6 +358,7 @@ input[type="text"], input[type="number"] {
 /*#endregion */
 
 .menuSelected {
-    color: yellow;
+    color: #F5AD98 !important;
+    font-weight: bold;
     text-decoration: underline;
 }
