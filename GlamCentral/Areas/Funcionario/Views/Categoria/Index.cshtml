@@ -1,0 +1,92 @@
+﻿@model IndexViewModel
+
+@{
+    ViewData["Title"] = "Categorias";
+    var pesquisa = Context.Request.Query["pesquisa"];
+    var ordenacao = Context.Request.Query["ordenacao"];
+    var status = Context.Request.Query["status"];
+}
+<div>
+    <br />
+    <br />
+    <br />
+    <h1 class="title-generic">@ViewData["Title"]</h1>
+    <br />
+    <form method="get">
+        <div class="form-group in-row">
+            <label for="pesquisa"></label>
+            <input type="search" name="pesquisa" id="pesquisa" value="@pesquisa" class="form-control" placeholder="Digite o nome">
+        </div>
+
+    </form>
+    <div>
+        <a asp-action="Cadastrar" class="btn btn-primary btn-default btn-blue">Cadastrar</a>
+    </div>
+    <br />
+    @if (TempData["MSG_S"] != null)
+    {
+        <p class="alert alert-success">@TempData["MSG_S"]</p>
+    }
+
+    <div class="in-row">
+        <div>
+            <a>Ordenar por: </a>
+            <select id="ordenacao" class="form-control ordenacao" asp-items="Model.Ordenacao"></select>
+        </div>
+        <div style="margin-left: 10px;">
+            <a>Filtrar por: </a>
+            <select id="status" class="form-control status" asp-items="Model.Status"></select>
+        </div>
+    </div>
+    <br />
+
+    @if (Model.CategoriasList.Count > 0)
+    {
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="table-cabecalho">
+                    <tr>
+                        <th scope="col">@Html.DisplayNameFor(model => model.CategoriasList.First().Id)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.CategoriasList.First().Nome)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.CategoriasList.First().CategoriaPaiID)</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Categoria categoria in Model.CategoriasList)
+                    {
+                        <tr>
+                            <th scope="row">@categoria.Id</th>
+                            <td>@categoria.Nome</td>
+                            <td>
+                                @Html.DisplayFor(model => categoria.CategoriaPai.Id)
+                                -
+                                @Html.DisplayFor(model => categoria.CategoriaPai.Nome)
+                            </td>
+                            <td>
+                                @if (categoria.Status)
+                                {
+                                    <a asp-action="GerenciarStatus" asp-route-id="@categoria.Id" class="btn btn-secondary btn-default btn-red">Desativar</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="GerenciarStatus" asp-route-id="@categoria.Id" class="btn btn-secondary btn-default btn-light-green">Ativar</a>
+                                }
+                                <a asp-action="Atualizar" asp-route-id="@categoria.Id" class="btn btn-secondary btn-default btn-orange">Editar</a>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @Html.PagedListPager((IPagedList)Model.CategoriasList, pagina => Url.Action("Index", new { pagina, pesquisa = pesquisa, ordenacao = ordenacao }))
+    }
+    else
+    {
+        <span>Nenhum registro cadastrado!</span>
+    }
+
+    <div>
+        <a asp-action="Index" asp-controller="Produto" class="btn btn-primary btn-default btn-green">Voltar</a>
+    </div>
+</div>

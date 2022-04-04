@@ -1,0 +1,48 @@
+﻿@model GlamCentral.Models.Funcionario
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<br />
+<br />
+<br />
+@if (ViewData["MSG_E"] != null)
+{
+    <p class="alert alert-danger">@Html.Raw(ViewData["MSG_E"])</p>
+}
+@if (ViewData["MSG_S"] != null)
+{
+    <p class="alert alert-danger">@Html.Raw(ViewData["MSG_S"])</p>
+}
+<body class="login-body">
+    <div id="card">
+        <div id="card-content">
+            <div id="card-title">
+                <h2>@ViewData["Title"]</h2>
+                <br />
+                <div class="underline-title"></div>
+            </div>
+            <form method="post" class="form login-form">
+                <label class="login-label" for="user-email" style="padding-top:13px">
+                    &nbsp;Email
+                </label>
+                <input id="user-email" asp-for="Email" type="email" class="form-content" autocomplete="on" required />
+
+                <div class="form-border"></div>
+                <label class="login-label" for="user-password" style="padding-top:22px">
+                    &nbsp;Password
+                </label>
+                <input id="user-password" asp-for="Senha" class="form-content" type="password" required />
+
+                @{<div class="form-border"></div>
+                    <a class="login-a" asp-action="RecuperarSenha">
+                        <legend id="forgot-pass">Esqueci minha senha</legend>
+                    </a>
+                }
+                <input id="submit-btn" type="submit" name="submit" value="Acessar" />
+            </form>
+        </div>
+    </div>
+
+</body>

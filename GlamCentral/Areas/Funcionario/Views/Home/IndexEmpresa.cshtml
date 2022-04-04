@@ -1,0 +1,36 @@
+﻿@model GlamCentral.Models.Empresa
+@{
+    ViewData["Title"] = "Dados da Empresa";
+}
+<div>
+    <br />
+    <br />
+    <br />
+    <h1 class="title-generic">@ViewData["Title"]</h1>
+
+    @if (TempData["MSG_S"] != null)
+    {
+        <p class="alert alert-success">@TempData["MSG_S"]</p>
+    }
+    <br />
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="RazaoSocial"></label>
+            <input asp-for="RazaoSocial" class="form-control" readonly>
+            <span asp-validation-for="RazaoSocial" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="CNPJ"></label>
+            <input asp-for="CNPJ" class="form-control" readonly>
+            <span asp-validation-for="CNPJ" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Telefone"></label>
+            <input asp-for="Telefone" class="form-control" readonly>
+            <span asp-validation-for="Telefone" class="text-danger"></span>
+        </div>
+        <div>
+            <a asp-action="Painel" asp-controller="Home" class="btn btn-primary btn-default btn-green no-print">Voltar</a><a style="margin-left: 800px;" asp-action="AtualizarEmpresa" asp-controller="Home" class="btn btn-primary btn-default btn-blue">Editar</a>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,42 @@
+﻿@inject GlamCentral.Libraries.Login.LoginFuncionario funcionario
+@model GlamCentral.Models.Funcionario
+
+@{
+    ViewData["Title"] = "Recuperar Senha";
+}
+
+<br />
+<br />
+<br />
+@if (ViewData["MSG_E"] != null)
+{
+    <p class="alert alert-danger">@Html.Raw(ViewData["MSG_E"])</p>
+}
+@if (ViewData["MSG_S"] != null)
+{
+    <p class="alert alert-danger">@Html.Raw(ViewData["MSG_S"])</p>
+}
+<body class="login-body">
+    <div id="card">
+        <div id="card-content">
+            <div id="card-title">
+                <h2>@ViewData["Title"]</h2>
+                <br />
+                <div class="underline-title"></div>
+            </div>
+            <form method="post" class="form login-form">
+                <label class="login-label" for="user-email" style="padding-top:13px">
+                    &nbsp;Uma nova senha será enviada. Digite seu e-mail:
+                </label>
+                <input id="user-email" asp-for="Email" type="email" class="form-content" autocomplete="on" required />
+
+                <input id="submit-btn-enviar" asp-action="BuscaFuncionarioPorEmail" type="submit" name="submit" value="Enviar" />
+
+                <input id="submit-btn" asp-action="Login" asp-controller="Home" formnovalidate="formnovalidate" type="submit" name="submit" value="Voltar" />
+            </form>
+        </div>
+    </div>
+
+</body>
+
+<script src="../wwwroot/js/Funcionario.js"></script>

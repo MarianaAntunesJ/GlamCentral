@@ -1,0 +1,90 @@
+﻿@inject GlamCentral.Libraries.Login.LoginFuncionario funcionario
+@model GlamCentral.Models.ViewModels.GraficoProdutoViewModel
+
+<br />
+<br />
+<br />
+<br />
+<br />
+
+<div class="only-print">
+    <img style="margin-left: 400px;" src="~/img/Logo-GlamCentral (1).png" alt="glam-central" />
+    <br />
+    <br />
+    <br />
+    <form>
+        <label for="fname">Razão Social: </label>
+        <input asp-for="Empresa.RazaoSocial"><br />
+        <label for="fname">CNPJ: </label>
+        <input style="margin-left: 65px; " asp-for="Empresa.CNPJ"><br />
+        <label for="fname">Contato: </label>
+        <input style="margin-left: 40px; " asp-for="Empresa.Telefone"><br />
+        <label for="fname">Gerador por: </label>
+        <input style="margin-left: 5px; " value="@funcionario.GetFuncionario().Nome"><br />
+        <label for="fname">Data: </label>
+        <input style="margin-left: 65px; " value="@ViewBag.Data">
+
+        <h1 class="title-generic">@ViewData["Title"]</h1>
+
+    </form>
+</div>
+
+<div col-md-12>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="/resources/lib/jquery3.3.1/jquery-3.3.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/resources/lib/jquery3.3.1/jquery-3.3.1.min.js"><\/script>')</script>
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="title-generic">Gráficos</h1>
+        <button onclick="window.print()" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm no-print"><i class="fas fa-download fa-sm text-white-50"></i> Gerar Relatório</button>
+    </div>
+    <br />
+    <br />
+    <br />
+
+    <div class="">
+        <div class="form-group in-row col-md-20">
+            <div class="form-group col-md-2">
+                <p>Ordenar por: </p>
+            </div>
+            <div class="form-group col-md-4">
+                <select id="categoria" class="form-control categoria" onchange="GerarGraficoCategoria()" asp-items="Model.CategoriasUnicas"></select>
+            </div>
+        </div>
+    </div>
+
+    <div id="produtosCategorias" style="width: 900px; height: 500px;"></div>
+
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+
+
+    <div class="">
+        <div class="form-group in-row col-md-20">
+            <div class="form-group col-md-4">
+                <span>Minimo: </span>
+                <input name="min" id="min" type="number" class="form-control" value="0" />
+            </div>
+            <div class="form-group col-md-4">
+                <span>Maximo: </span>
+                <input name="max" id="max" type="number" class="form-control" style="margin-left: 10px;" value="5" />
+            </div>
+            <div class="form-group col-md-4">
+                <a name="buscar" class="btn btn-primary btn-default btn-green no-print" style="margin-top: 20px;" id="buscarQuantidade" onclick="GerarGraficoQuantidade()">Buscar</a>
+            </div>
+        </div>
+    </div>
+    <div id="produtosQuantidade" style="width: 900px; height: 500px;"></div>
+
+    <br />
+    <br />
+
+    <div>
+        <a asp-action="Painel" asp-controller="Home" class="btn btn-primary btn-default btn-green no-print">Voltar</a>
+    </div>
+
+    <script src="~/js/Produto.js"></script>
+</div>

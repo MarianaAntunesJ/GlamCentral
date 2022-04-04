@@ -1,0 +1,83 @@
+﻿@model IndexViewModel
+
+@{
+    ViewData["Title"] = "Procedimentos";
+    var pesquisa = Context.Request.Query["pesquisa"];
+    var ordenacao = Context.Request.Query["ordenacao"];
+    var status = Context.Request.Query["status"];
+}
+<br />
+<br />
+<br />
+<h1 class="title-generic">@ViewData["Title"]</h1>
+<br />
+<form method="get">
+    <div class="form-group in-row">
+        <label for="pesquisa"></label>
+        <input type="search" name="pesquisa" onkeyup="Pesquisar()" style="font-size: 20px; padding: 20px; margin-right: 30px;" id="pesquisa" value="@pesquisa" class="form-control" placeholder="Digite o nome">
+    </div>
+</form>
+<div>
+    <a asp-action="Cadastrar" class="btn btn-primary btn-default btn-blue">Cadastrar</a>
+</div>
+<br />
+@if (TempData["MSG_S"] != null)
+{
+    <p class="alert alert-success">@TempData["MSG_S"]</p>
+}
+<div class="in-row">
+    <div>
+        <a>Ordenar por: </a>
+        <select id="ordenacao" class="form-control ordenacao" asp-items="Model.Ordenacao"></select>
+    </div>
+    <div style="margin-left: 10px;">
+        <a>Filtrar por: </a>
+        <select id="status" class="form-control status" asp-items="Model.Status"></select>
+    </div>
+</div>
+<br />
+
+@if (Model.Procedimentos.Count > 0)
+{
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-cabecalho">
+                <tr>
+                    <th scope="col">@Html.DisplayNameFor(model => model.Procedimentos.First().Id)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.Procedimentos.First().Nome)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.Procedimentos.First().Duracao)</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Procedimento procedimento in Model.Procedimentos)
+                {
+                    <tr>
+                        <th scope="row">@procedimento.Id</th>
+                        <td>@procedimento.Nome</td>
+                        <td>@procedimento.Duracao</td>
+                        <td>
+                            @if (procedimento.Status)
+                            {
+                                <a asp-action="GerenciarStatus" asp-route-id="@procedimento.Id" class="btn btn-secondary btn-default btn-red">Desativar</a>
+                            }
+                            else
+                            {
+                                <a asp-action="GerenciarStatus" asp-route-id="@procedimento.Id" class="btn btn-secondary btn-default btn-light-green">Ativar</a>
+                            }
+                            <a asp-action="Atualizar" asp-route-id="@procedimento.Id" class="btn btn-secondary btn-default btn-orange">Editar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @Html.PagedListPager((IPagedList)Model.Procedimentos, pagina => Url.Action("Index", new { pagina, pesquisa = pesquisa, ordenacao = ordenacao }))
+
+}
+else
+{
+    <span>Nenhum registro cadastrado!</span>
+}

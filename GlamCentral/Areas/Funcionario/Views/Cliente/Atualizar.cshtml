@@ -1,0 +1,42 @@
+﻿@model GlamCentral.Models.Cliente
+@{
+    ViewData["Title"] = "Editar Cliente";
+}
+<div>
+    <br />
+    <br />
+    <br />
+    <h1 class="title-generic">@ViewData["Title"]</h1><form method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="Nome"></label>
+        <input asp-for="Nome" class="form-control" placeholder="Digite o nome">
+        <span asp-validation-for="Nome" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CPF"></label>
+        <input asp-for="CPF" class="form-control" onclick="$(this).mask('000.000.000-00');" placeholder="000.000.000-00">
+        <span asp-validation-for="CPF" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DataNascimento"></label>
+        <input asp-for="DataNascimento" class="form-control" placeholder="dd/mm/aaaa">
+        <span asp-validation-for="DataNascimento" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Telefone"></label>
+        <input asp-for="Telefone" class="form-control" onclick="$(this).mask('(00) 00000-0000')" placeholder="(00) 00000-0000">
+        <span asp-validation-for="Telefone" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Status"></label>
+        <input asp-for="Status" type="checkbox" class="bigger-checkbox" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" placeholder="exemplo@email.com">
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary btn-blue">Salvar</button> <a asp-action="Index" class="btn btn-info">Voltar</a>
+</form>
+</div>

@@ -1,0 +1,29 @@
+﻿@model GlamCentral.Models.Empresa
+@{
+    ViewData["Title"] = "Dados da Empresa";
+}
+<div>
+    <br />
+    <br />
+    <br />
+    <h1 class="title-generic">@ViewData["Title"]</h1>
+    <form method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <label asp-for="RazaoSocial"></label>
+            <input asp-for="RazaoSocial" class="form-control" placeholder="Digite o nome">
+            <span asp-validation-for="RazaoSocial" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="CNPJ"></label>
+            <input asp-for="CNPJ" class="form-control" onclick="$(this).mask('00.000.000/0000-00');" placeholder="000.000.000-00">
+            <span asp-validation-for="CNPJ" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Telefone"></label>
+            <input asp-for="Telefone" class="form-control" onclick="$(this).mask('(00) 00000-0000')" placeholder="(00) 00000-0000">
+            <span asp-validation-for="Telefone" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary btn-blue">Salvar</button> <a asp-action="IndexEmpresa" class="btn btn-info">Voltar</a>
+    </form>
+</div>

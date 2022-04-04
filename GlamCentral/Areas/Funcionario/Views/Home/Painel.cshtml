@@ -1,0 +1,29 @@
+﻿@inject GlamCentral.Libraries.Login.LoginFuncionario funcionario
+@{
+    ViewData["Title"] = "Painel";
+}
+<br />
+<br />
+<div>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="/resources/lib/jquery3.3.1/jquery-3.3.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/resources/lib/jquery3.3.1/jquery-3.3.1.min.js"><\/script>')</script>
+
+    <img style="display: block; margin-left: auto; margin-right: auto " src="~/img/Logo-GlamCentral.png" alt="glam-central" />
+    <div class="form-group in-row col-md-20">
+        @if (funcionario.GetFuncionario()?.Cargo == (int)CargoFuncionario.Gerente)
+        {
+            <div class="form-group col-md-4">
+                <a asp-action="Grafico" asp-controller="Home" style="background-color: #56cc9d;" class="btn btn-primary btn-default btn-green">Gráficos</a>
+            </div>
+            <div class="form-group col-md-4">
+                <a asp-action="Relatorio" asp-controller="Home" style="background-color: #6cc3d5;" class="btn btn-primary btn-default btn-green">Relatórios</a>
+            </div>
+            <div class="form-group col-md-4">
+                <a asp-action="IndexEmpresa" asp-controller="Home" style="background-color: #ffce67;" class="btn btn-primary btn-default btn-green">Dados da Empresa</a>
+            </div>
+        }
+    </div>
+
+    <script src="~/js/Produto.js"></script>
+</div>
