@@ -129,10 +129,11 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         }
         private List<Categoria> GetCategorias(List<Categoria> categorias, Categoria categoriaPrincipal)
         {
-            if(categorias.Where(_ => _.CategoriaPaiID = categoriaPrincipal.Id).Count() > 0)
+            /*if(categorias.Where(_ => _.CategoriaPaiID = categoriaPrincipal.Id).Count() > 0)
             {
 
-            }
+            }*/
+            return null;
         }
     }
 }

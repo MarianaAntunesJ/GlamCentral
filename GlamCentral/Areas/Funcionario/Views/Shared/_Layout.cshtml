@@ -28,17 +28,17 @@
             <vc:menu></vc:menu>
         </header>
     }
-    <div class="col-md-6 table-center">
+    <div class="col-md-8 table-center">
         @RenderBody()
     </div>
 
-    @if (ViewBag.ShowTopBar ?? true)
+    @{/*if (ViewBag.ShowTopBar ?? true)
     {
         <!-- FOOTER -->
         <footer class="footer">
             <p>&copy; 2020-@DateTime.Now.Year Glam Central.</p>
         </footer>
-    }
+    }*/}
 
     <script src="/resources/lib/holder/holder.min.js"></script>
     <script src="/resources/lib/mask/jquery.mask.min.js"></script>
@@ -49,5 +49,6 @@
     <script src="~/js/Actions.js"></script>
     <script src="~/resources/lib/bootstrap-4.2.1-dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>    
+    @RenderSection("Scripts", false)
 </body>
 </html>
