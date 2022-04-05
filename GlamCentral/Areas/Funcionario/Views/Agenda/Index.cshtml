@@ -6,27 +6,35 @@
 <br />
 <br />
 
-<h2>@ViewData["Title"]</h2>
+<h1 class="title-generic">@ViewData["Title"]</h1>
+
+<br />
+<br />
 <div id="calender"></div>
 
 <div id="myModal" class="modal fade" role="dialog">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title"><span id="eventTitle"></span></h4>
+				<div>
+					<h4 class="modal-title"><span id="eventTitle"></span></h4>
+
+				</div>
+				<div>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
 			</div>
 			<div class="modal-body">
-				<button id="btnDelete" class="btn btn-default btn-sm pull-right">
+				<button id="btnDelete" class="btn btn-secondary btn-red btn-sm pull-right">
 					<span class="glyphicon glyphicon-remove"></span> Excluir
 				</button>
-				<button id="btnEdit" class="btn btn-default btn-sm pull-right" style="margin-right:5px;">
+				<button id="btnEdit" class="btn btn-secondary btn-orange btn-sm pull-right" style="margin-right:5px;">
 					<span class="glyphicon glyphicon-pencil"></span> Editar
 				</button>
 				<p id="pDetails"></p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+				<button type="button" class="btn btn-secondary btn-btn-light-green" data-dismiss="modal">Fechar</button>
 			</div>
 		</div>
 	</div>
@@ -36,8 +44,12 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">Salvar</h4>
+				<div>
+					<h4 class="modal-title">Salvar</h4>
+				</div>
+				<div>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
 			</div>
 			<div class="modal-body">
 				<form class="col-md-12 form-horizontal">
@@ -77,10 +89,9 @@
 					<div class="form-group">
 						<label>Cor</label>
 						<select id="ddThemeColor" class="form-control">
-							<option value="">Default</option>
+							<option value="">Padrão</option>
 							<option value="#F5AD98">Laranja</option>
 							<option value="#00DB78">Verde</option>
-							<option value="#eb9195">Rosa</option>
 							<option value="#FFF261">Amarelo</option>
 						</select>
 					</div>
@@ -101,211 +112,211 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 <script>
-			$(document).ready(function () {
-				var events = [];
-				var selectedEvent = null;
-				FetchEventAndRenderCalendar();
-				function FetchEventAndRenderCalendar() {
-					events = [];
-					$.ajax({
-						type: "GET",
-						url: "/Funcionario/Agenda/Buscar",
-						success: function (data) {
-							$.each(data, function (i, v) {
-								events.push({
-									Id: v.id,
-									title: v.subject,
-									description: v.description,
-									start: moment(v.start),
-									end: v.end != null ? moment(v.end) : null,
-									color: v.themeColor,
-									allDay: v.isFullDay
-								});
-							})
-
-							GenerateCalender(events);
-						},
-						error: function (error) {
-							alert('failed');
-						}
+	$(document).ready(function () {
+		var events = [];
+		var selectedEvent = null;
+		FetchEventAndRenderCalendar();
+		function FetchEventAndRenderCalendar() {
+			events = [];
+			$.ajax({
+				type: "GET",
+				url: "/Funcionario/Agenda/Buscar",
+				success: function (data) {
+					$.each(data, function (i, v) {
+						events.push({
+							Id: v.id,
+							title: v.subject,
+							description: v.description,
+							start: moment(v.start),
+							end: v.end != null ? moment(v.end) : null,
+							color: v.themeColor,
+							allDay: v.isFullDay
+						});
 					})
-				}
 
-				function GenerateCalender(events) {
-					$('#calender').fullCalendar('destroy');
-					$('#calender').fullCalendar({
-						//contentHeight: auto,
-						defaultDate: new Date(),
-						monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-						monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-						dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabado'],
-						dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-						timeFormat: 'h(:mm)a',
-						buttonText: {
-							today: 'hoje',
-							month: 'mês',
-							week: 'semana',
-							day: 'dia'
-						},
-						header: {
-							left: 'prev,next today',
-							center: 'title',
-							right: 'month,basicWeek,basicDay,agenda'
-						},
-						eventLimit: true,
-						eventColor: '#eb9195',
-						events: events,
-						eventClick: function (calEvent, jsEvent, view) {
-							selectedEvent = calEvent;
-							$('#myModal #eventTitle').text(calEvent.title);
-							var $description = $('<div/>');
-							$description.append($('<p/>').html('<b><b>    Início: </b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
-							if (calEvent.end != null) {
-								$description.append($('<p/>').html('<b>    Fim: </b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
-							}
-							$description.append($('<p/>').html('<b>    Descrição: </b>' + calEvent.description));
-							$('#myModal #pDetails').empty().html($description);
-
-							$('#myModal').modal();
-						},
-						selectable: true,
-						select: function (start, end) {
-							selectedEvent = {
-								id: 0,
-								title: '',
-								description: '',
-								start: start,
-								end: end,
-								allDay: false,
-								color: ''
-							};
-							openAddEditForm();
-							$('#calendar').fullCalendar('unselect');
-						},
-						editable: true,
-						eventDrop: function (event) {
-							var data = {
-								Id: event.id,
-								Subject: event.title,
-								Start: event.start.format('DD/MM/YYYY HH:mm A'),
-								End: event.end != null ? event.end.format('DD/MM/YYYY HH:mm A') : null,
-								Description: event.description,
-								ThemeColor: event.color,
-								IsFullDay: event.allDay
-							};
-							SaveEvent(data);
-						}
-					})
-				}
-
-				$('#btnEdit').click(function () {
-					//Open modal dialog for edit event
-					openAddEditForm();
-				})
-				$('#btnDelete').click(function () {
-					var data = {'id': selectedEvent.Id};
-					data.__RequestVerificationToken = $('input[name="__RequestVerificationToken"]').val();
-					if (selectedEvent != null && confirm('Are you sure?')) {
-					$.ajax({
-						type: "POST",
-						url: '/Funcionario/Agenda/Excluir',
-						data: data,
-						success: function (status) {
-							if (status) {
-								//Refresh the calender
-								FetchEventAndRenderCalendar();
-								$('#myModal').modal('hide');
-							}
-						},
-						error: function () {
-							alert('Failed');
-						}
-					})
-				}
-				})
-
-				$('#dtp1,#dtp2').datetimepicker({
-					format: 'DD/MM/YYYY HH:mm A'
-				});
-
-				$('#chkIsFullDay').change(function () {
-					if ($(this).is(':checked')) {
-						$('#divEndDate').hide();
-					}
-					else {
-						$('#divEndDate').show();
-					}
-				});
-
-				function openAddEditForm() {
-					if (selectedEvent != null) {
-						$('#hdEventID').val(selectedEvent.Id);
-						$('#txtSubject').val(selectedEvent.title);
-						$('#txtStart').val(selectedEvent.start.format('DD/MM/YYYY HH:mm A'));
-						$('#chkIsFullDay').prop("checked", selectedEvent.allDay || false);
-						$('#chkIsFullDay').change();
-						$('#txtEnd').val(selectedEvent.end != null ? selectedEvent.end.format('DD/MM/YYYY HH:mm A') : '');
-						$('#txtDescription').val(selectedEvent.description);
-						$('#ddThemeColor').val(selectedEvent.color);
-					}
-					$('#myModal').modal('hide');
-					$('#myModalSave').modal();
-				}
-
-				$('#btnSave').click(function () {
-					//Validation/
-					if ($('#txtSubject').val().trim() == "") {
-						alert('Subject required');
-						return;
-					}
-					if ($('#txtStart').val().trim() == "") {
-						alert('Start date required');
-						return;
-					}
-					if ($('#chkIsFullDay').is(':checked') == false && $('#txtEnd').val().trim() == "") {
-						alert('End date required');
-						return;
-					}
-					else {
-						var startDate = moment($('#txtStart').val(), "DD/MM/YYYY HH:mm A").toDate();
-						var endDate = moment($('#txtEnd').val(), "DD/MM/YYYY HH:mm A").toDate();
-						if (startDate > endDate) {
-							alert('Invalid end date');
-							return;
-						}
-					}
-
-					var data = {
-						Id: $('#hdEventID').val(),
-						Subject: $('#txtSubject').val().trim(),
-						Start: $('#txtStart').val().trim(),
-						End: $('#chkIsFullDay').is(':checked') ? null : $('#txtEnd').val().trim(),
-						Description: $('#txtDescription').val(),
-						ThemeColor: $('#ddThemeColor').val(),
-						IsFullDay: $('#chkIsFullDay').is(':checked')
-					}
-					data.__RequestVerificationToken = $('input[name="__RequestVerificationToken"]').val();
-					SaveEvent(data);
-					// call function for submit data to the server
-				})
-
-				function SaveEvent(data) {
-					$.ajax({
-						type: "POST",
-						url: '/Funcionario/Agenda/Cadastrar',
-						data: data,
-						success: function (status) {
-							if (status) {
-								//Refresh the calender
-								FetchEventAndRenderCalendar();
-								$('#myModalSave').modal('hide');
-							}
-						},
-						error: function () {
-							alert('Failed');
-						}
-					})
+					GenerateCalender(events);
+				},
+				error: function (error) {
+					alert('failed');
 				}
 			})
+		}
+
+		function GenerateCalender(events) {
+			$('#calender').fullCalendar('destroy');
+			$('#calender').fullCalendar({
+				//contentHeight: auto,
+				defaultDate: new Date(),
+				monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+				monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+				dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabado'],
+				dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+				timeFormat: 'h(:mm)a',
+				buttonText: {
+					today: 'hoje',
+					month: 'mês',
+					week: 'semana',
+					day: 'dia'
+				},
+				header: {
+					left: 'prev,next today',
+					center: 'title',
+					right: 'month,basicWeek,basicDay,agenda'
+				},
+				eventLimit: true,
+				eventColor: '#eb9195',
+				events: events,
+				eventClick: function (calEvent, jsEvent, view) {
+					selectedEvent = calEvent;
+					$('#myModal #eventTitle').text(calEvent.title);
+					var $description = $('<div/>');
+					$description.append($('<p/>').html('<br /><br /><b>    Início: </b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
+					if (calEvent.end != null) {
+						$description.append($('<p/>').html('<b>    Fim: </b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
+					}
+					$description.append($('<p/>').html('<b>    Descrição: </b>' + calEvent.description));
+					$('#myModal #pDetails').empty().html($description);
+
+					$('#myModal').modal();
+				},
+				selectable: true,
+				select: function (start, end) {
+					selectedEvent = {
+						id: 0,
+						title: '',
+						description: '',
+						start: start,
+						end: end,
+						allDay: false,
+						color: ''
+					};
+					openAddEditForm();
+					$('#calendar').fullCalendar('unselect');
+				},
+				editable: true,
+				eventDrop: function (event) {
+					var data = {
+						Id: event.id,
+						Subject: event.title,
+						Start: event.start.format('DD/MM/YYYY HH:mm A'),
+						End: event.end != null ? event.end.format('DD/MM/YYYY HH:mm A') : null,
+						Description: event.description,
+						ThemeColor: event.color,
+						IsFullDay: event.allDay
+					};
+					SaveEvent(data);
+				}
+			})
+		}
+
+		$('#btnEdit').click(function () {
+			//Open modal dialog for edit event
+			openAddEditForm();
+		})
+		$('#btnDelete').click(function () {
+			var data = {'id': selectedEvent.Id};
+			data.__RequestVerificationToken = $('input[name="__RequestVerificationToken"]').val();
+			if (selectedEvent != null) {
+			$.ajax({
+				type: "POST",
+				url: '/Funcionario/Agenda/Excluir',
+				data: data,
+				success: function (status) {
+					if (status) {
+						//Refresh the calender
+						FetchEventAndRenderCalendar();
+						$('#myModal').modal('hide');
+					}
+				},
+				error: function () {
+					alert('Failed');
+				}
+			})
+		}
+		})
+
+		$('#dtp1,#dtp2').datetimepicker({
+			format: 'DD/MM/YYYY HH:mm A'
+		});
+
+		$('#chkIsFullDay').change(function () {
+			if ($(this).is(':checked')) {
+				$('#divEndDate').hide();
+			}
+			else {
+				$('#divEndDate').show();
+			}
+		});
+
+		function openAddEditForm() {
+			if (selectedEvent != null) {
+				$('#hdEventID').val(selectedEvent.Id);
+				$('#txtSubject').val(selectedEvent.title);
+				$('#txtStart').val(selectedEvent.start.format('DD/MM/YYYY HH:mm A'));
+				$('#chkIsFullDay').prop("checked", selectedEvent.allDay || false);
+				$('#chkIsFullDay').change();
+				$('#txtEnd').val(selectedEvent.end != null ? selectedEvent.end.format('DD/MM/YYYY HH:mm A') : '');
+				$('#txtDescription').val(selectedEvent.description);
+				$('#ddThemeColor').val(selectedEvent.color);
+			}
+			$('#myModal').modal('hide');
+			$('#myModalSave').modal();
+		}
+
+		$('#btnSave').click(function () {
+			//Validation/
+			if ($('#txtSubject').val().trim() == "") {
+				alert('Subject required');
+				return;
+			}
+			if ($('#txtStart').val().trim() == "") {
+				alert('Start date required');
+				return;
+			}
+			if ($('#chkIsFullDay').is(':checked') == false && $('#txtEnd').val().trim() == "") {
+				alert('End date required');
+				return;
+			}
+			else {
+				var startDate = moment($('#txtStart').val(), "DD/MM/YYYY HH:mm A").toDate();
+				var endDate = moment($('#txtEnd').val(), "DD/MM/YYYY HH:mm A").toDate();
+				if (startDate > endDate) {
+					alert('Invalid end date');
+					return;
+				}
+			}
+
+			var data = {
+				Id: $('#hdEventID').val(),
+				Subject: $('#txtSubject').val().trim(),
+				Start: $('#txtStart').val().trim(),
+				End: $('#chkIsFullDay').is(':checked') ? null : $('#txtEnd').val().trim(),
+				Description: $('#txtDescription').val(),
+				ThemeColor: $('#ddThemeColor').val(),
+				IsFullDay: $('#chkIsFullDay').is(':checked')
+			}
+			data.__RequestVerificationToken = $('input[name="__RequestVerificationToken"]').val();
+			SaveEvent(data);
+			// call function for submit data to the server
+		})
+
+		function SaveEvent(data) {
+			$.ajax({
+				type: "POST",
+				url: '/Funcionario/Agenda/Cadastrar',
+				data: data,
+				success: function (status) {
+					if (status) {
+						//Refresh the calender
+						FetchEventAndRenderCalendar();
+						$('#myModalSave').modal('hide');
+					}
+				},
+				error: function () {
+					alert('Failed');
+				}
+			})
+		}
+	})
 </script>
 }

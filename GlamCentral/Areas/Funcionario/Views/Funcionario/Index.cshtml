@@ -48,7 +48,8 @@
                     <th scope="col">@Html.DisplayNameFor(model => model.Funcionarios.First().Nome)</th>
                     <th scope="col">@Html.DisplayNameFor(model => model.Funcionarios.First().Telefone)</th>
                     <th scope="col">@Html.DisplayNameFor(model => model.Funcionarios.First().CPF)</th>
-                    <th scope="col">Senha</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -61,7 +62,10 @@
                         <td>@funcionario.Telefone</td>
                         <td>@funcionario.CPF</td>
                         <td>
-                            <a asp-action="GerarSenha" asp-route-id="@funcionario.Id" class="btn btn-secondary">Gerar Senha</a>
+                            <a asp-action="GerarSenha" asp-route-id="@funcionario.Id" class="btn btn-secondary btn-green">Senha</a>
+                        </td>
+                        <td>
+                            <a asp-action="Atualizar" asp-route-id="@funcionario.Id" class="btn btn-secondary btn-default btn-orange">Editar</a>
                         </td>
                         <td>
                             @if (funcionario.Cargo != 1)
@@ -75,7 +79,6 @@
                                     <a asp-action="GerenciarStatus" asp-route-id="@funcionario.Id" class="btn btn-secondary btn-default btn-light-green">Ativar</a>
                                 }
                             }
-                            <a asp-action="Atualizar" asp-route-id="@funcionario.Id" class="btn btn-secondary btn-default btn-orange">Editar</a>
                         </td>
                     </tr>
                 }

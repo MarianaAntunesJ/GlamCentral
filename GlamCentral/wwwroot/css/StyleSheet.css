@@ -107,6 +107,10 @@ input[type="text"], input[type="number"] {
     display: block;
 }
 
+.btn-padding {
+    padding: 20px;
+}
+
 .btn-blue {
     background-color: #428bca;
 }
