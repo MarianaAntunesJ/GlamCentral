@@ -3,6 +3,10 @@
     GerarGraficos();
 });
 
+navbarDropdownProduto.onclick = function () {
+    window.location.href = "https://localhost:44375/Funcionario/Produto/Index";
+}
+
 function GerarGraficoCategoria() {
     google.charts.setOnLoadCallback(CarregaDados);
 }

@@ -23,5 +23,18 @@ namespace GlamCentral.Models
         public DateTime End { get; set; }
         public string ThemeColor { get; set; }
         public bool IsFullDay { get; set; }
+
+        public Agenda()
+        {
+        }
+
+        public Agenda(int id, string subject, string description, DateTime start, DateTime end)
+        {
+            Id = id;
+            Subject = subject;
+            Description = description;
+            Start = start;
+            End = end;
+        }
     }
 }

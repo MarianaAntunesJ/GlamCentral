@@ -24,7 +24,7 @@ namespace GlamCentral.Libraries.Middleware
                 && !(context.Request.Form.Files.Count == 1 && ajax))
             {
                     await _antiforgery.ValidateRequestAsync(context);         
-            }                
+            }               
             await _next(context);
         }
     }

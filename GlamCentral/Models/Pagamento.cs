@@ -9,6 +9,6 @@ namespace GlamCentral.Models
     {
         public int Id { get; set; }
         public int Valor { get; set; }
-        public int Procedimento { get; set; }
+        public int Agenda { get; set; }
     }
 }

@@ -1,0 +1,21 @@
+﻿@{
+    var subMenu = ViewData["subMenu"];
+    //var relatorios = (string)ViewData["relatorios"];
+    var teste = new List<string> { "Financeiro", "Vendas" };
+}
+@if ((string)subMenu == "Relatórios")
+{
+    <li class="dropdownL-submenu">
+        <a class="dropdown-item" tabindex="-1" href="#">@subMenu</a>
+        <ul class="dropdown-menu">
+            @foreach (var item in teste)
+            {
+                <li class="dropdown-item"><a href="#">@item</a></li>
+            }
+        </ul>
+    </li>
+}
+else
+{
+    <li class="dropdown-item"><a href="#" style="color: black;">@subMenu</a></li>
+}
