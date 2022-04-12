@@ -16,9 +16,8 @@ namespace GlamCentral.Areas.Funcionario.Controllers
     public class HomeController : Controller
     {
         #region "Propriedades Privadas"
-        private IFuncionarioRepository _repository;
+        private IFuncionarioRepository _funcionarioRepository;
         private LoginFuncionario _loginFuncionario;
-        private GerenciarEmail _gerenciarEmail;
         private IProdutoRepository _produtoRepository;
         private ICategoriaRepository _categoriaRepository;
         private IClienteRepository _clienteRepository;
@@ -26,22 +25,33 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         #endregion
 
         #region "Construtor"
-        public HomeController(IFuncionarioRepository repository, LoginFuncionario loginFuncionario,
-            GerenciarEmail gerenciarEmail, ICategoriaRepository categoriaRepository,
+        public HomeController(IFuncionarioRepository repository, ICategoriaRepository categoriaRepository,
             IProdutoRepository produtoRepository, IClienteRepository clienteRepository,
-            IEmpresaRepository empresaRepository)
+            IEmpresaRepository empresaRepository, LoginFuncionario loginFuncionario)
         {
-            _repository = repository;
-            _loginFuncionario = loginFuncionario;
-            _gerenciarEmail = gerenciarEmail;
+            _funcionarioRepository = repository;
             _categoriaRepository = categoriaRepository;
             _produtoRepository = produtoRepository;
             _clienteRepository = clienteRepository;
             _empresaRepository = empresaRepository;
+            _loginFuncionario = loginFuncionario;
         }
         #endregion
 
-        #region "Métodos Públicos - (GET)"
+        #region "Métodos Públicos - (GET)"        
+
+        public IActionResult CadastrarSenha()
+        {
+            return View();
+        }              
+
+        public IActionResult Painel()
+        {
+            return View();
+        }
+        #endregion
+
+        #region "Login"
         public IActionResult Login()
         {
             ViewBag.ShowTopBar = false;
@@ -55,57 +65,17 @@ namespace GlamCentral.Areas.Funcionario.Controllers
             return RedirectToAction("Login", "Home");
         }
 
-        public IActionResult CadastrarSenha()
-        {
-            return View();
-        }
-
         public IActionResult RecuperarSenha()
         {
             ViewBag.ShowTopBar = false;
             return View();
         }
 
-        public IActionResult Painel()
-        {
-            return View();
-        }
-
-        // Todo: recuperar senha
-        [HttpGet]
-        [ValidateHttpReferer]
-        public IActionResult EmailRecuperarSenha(string email)
-        {
-            Models.Funcionario funcionario = _repository.ObterFuncionarioPorEmail(email).FirstOrDefault();
-
-            if(funcionario != null)
-            {
-                funcionario.Senha = KeyGenerator.GetUniqueKey(8);
-                _repository.AtualizarSenha(funcionario);
-
-                //_gerenciarEmail.EnviarSenhaParaColaboradorPorEmail(funcionario);
-
-                ViewData["MSG_S"] = Mensagem.MSG_S_SenhaGerada;                
-            }
-
-            return View("Login");
-        }
-
-        public void BuscaFuncionarioPorEmail(string email)
-        {
-            if (_repository.ObterFuncionarioPorEmail(email) != null)
-            {
-                EmailRecuperarSenha(email);
-            }
-        }
-        #endregion
-
-        #region "Métodos Públicos - (POST)"
         [HttpPost]
         public IActionResult Login([FromForm] Models.Funcionario funcionario)
         {
             ViewBag.ShowTopBar = false;
-            var funcionarioDB = _repository.Login(funcionario.Email, funcionario.Senha);
+            var funcionarioDB = _funcionarioRepository.Login(funcionario.Email, funcionario.Senha);
             if (funcionarioDB != null)
             {
                 if (funcionarioDB.Status == false)
@@ -115,6 +85,7 @@ namespace GlamCentral.Areas.Funcionario.Controllers
                 }
 
                 _loginFuncionario.Login(funcionarioDB);
+                //return new RedirectResult(Url.Action(nameof(Painel)));
                 return new RedirectResult(Url.Action(nameof(Painel)));
             }
             else
@@ -123,8 +94,36 @@ namespace GlamCentral.Areas.Funcionario.Controllers
                 return View();
             }
         }
-        #endregion
 
+        // Todo: recuperar senha
+        [HttpGet]
+        [ValidateHttpReferer]
+        public IActionResult EmailRecuperarSenha(string email)
+        {
+            Models.Funcionario funcionario = _funcionarioRepository.ObterFuncionarioPorEmail(email).FirstOrDefault();
+
+            if (funcionario != null)
+            {
+                funcionario.Senha = KeyGenerator.GetUniqueKey(8);
+                _funcionarioRepository.AtualizarSenha(funcionario);
+
+                //_gerenciarEmail.EnviarSenhaParaColaboradorPorEmail(funcionario);
+
+                ViewData["MSG_S"] = Mensagem.MSG_S_SenhaGerada;
+            }
+
+            return View("Login");
+        }
+
+        public void BuscaFuncionarioPorEmail(string email)
+        {
+            if (_funcionarioRepository.ObterFuncionarioPorEmail(email) != null)
+            {
+                EmailRecuperarSenha(email);
+            }
+        }
+
+        #endregion
         // Todo: tirar grafico, relatorio e dados da empresa da home controller
         #region "Tirar"
         //[ValidateHttpReferer]

@@ -4,21 +4,12 @@
         pesquisa.selectionStart = pesquisa.value.length;
         pesquisa.focus();
     }
-    
+
     Pergunta();
     AjaxUploadImagemProduto();
     MudarOrdenacao();
-    SelecionaDropDownOrd();    
+    SelecionaDropDownOrd();
 });
-
-function MoverScrollOrdenacao() {
-    if (window.location.hash.length > 0) {
-        var hash = window.location.hash;
-        if (hash == "#ordenacao") {
-            window.scrollBy(0, 1500);
-        }
-    }
-}
 
 function Pergunta() {
     $(".btn-red").click(function (e) {
@@ -80,13 +71,11 @@ function Redirecionar() {
 
     /*if (queryString.has("pesquisa")) {
         Pesquisa = queryString.get("pesquisa");
-    }*/    
+    }*/
 
     var URL = window.location.protocol + "//" + window.location.host + window.location.pathname;
     var URLComParametros = URL + "?pagina=" + Pagina + "&pesquisa=" + Pesquisa + "&ordenacao=" + Ordenacao + "&status=" + Status + "#ordenacao";
     window.location.href = URLComParametros;
-    // Todo: Fazer funcionar
-    MoverScrollOrdenacao();
 }
 
 function AjaxUploadImagemProduto() {
