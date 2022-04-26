@@ -53,8 +53,15 @@
 					@Html.AntiForgeryToken()
 					<input type="hidden" id="hdEventID" value="0" />
 					<div class="form-group">
-						<label>Assunto</label>
-						<input type="text" id="txtSubject" class="form-control" />
+						<label>Dia</label>
+						@*<div class="input-group date" id="dtp1">*@
+						<input asp-for="Start" id="txtStart" class="form-control" placeholder="dd/mm/aaaa">
+						<span asp-validation-for="Start" class="text-danger"></span>
+						@*<input type="text" id="txtStart" class="form-control" />
+							<span class="input-group-addon">
+							<span class="glyphicon glyphicon-calendar"></span>
+							</span>*@
+						@*</div>*@
 					</div>
 					<div class="form-group col-md-6">
 						<label asp-for="FuncionarioId"></label>
@@ -76,28 +83,17 @@
 							<option value="">Selecione ...</option>
 						</select>
 						<span asp-validation-for="ProcedimentoId" class="text-danger"></span>
-					</div>
-					<div class="form-group">
-						<label>Início</label>
-						@*<div class="input-group date" id="dtp1">*@
-						<input asp-for="Start" id="txtStart" class="form-control" placeholder="dd/mm/aaaa">
-						<span asp-validation-for="Start" class="text-danger"></span>
-						@*<input type="text" id="txtStart" class="form-control" />
-							<span class="input-group-addon">
-							<span class="glyphicon glyphicon-calendar"></span>
-							</span>*@
-						@*</div>*@
-					</div>
+					</div>					
 					<div class="form-group">
 						<div class="checkbox">
 							<label><input type="checkbox" id="chkIsFullDay" checked="checked" />  Dia todo </label>
 						</div>
 					</div>
-					<div class="form-group" id="divEndDate" style="display:none">
-						<label>Fim</label>
+					<div class="form-group" id="divDuration" style="display:none">
+						<label>Duração</label>
 						@*<div class="input-group date" id="dtp2">*@
-						<input asp-for="End" id="txtEnd" class="form-control" placeholder="dd/mm/aaaa">
-						<span asp-validation-for="End" class="text-danger"></span>
+						<input asp-for="Duration" id="txtDuration" class="form-control" placeholder="dd/mm/aaaa">
+						<span asp-validation-for="Duration" class="text-danger"></span>
 						@*<span class="input-group-addon">
 							<span class="glyphicon glyphicon-calendar"></span>
 							</span>
@@ -191,9 +187,9 @@
 					selectedEvent = calEvent;
 					$('#myModal #eventTitle').text(calEvent.title);
 					var $description = $('<div/>');
-					$description.append($('<p/>').html('<br /><br /><b>    Início: </b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
+					$description.append($('<p/>').html('<br /><br /><b>    Data: </b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
 					if (calEvent.end != null) {
-						$description.append($('<p/>').html('<b>    Fim: </b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
+						$description.append($('<p/>').html('<b>    Duração: </b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
 					}
 					$description.append($('<p/>').html('<b>    Descrição: </b>' + calEvent.description));
 					$('#myModal #pDetails').empty().html($description);
@@ -262,21 +258,20 @@
 
 		$('#chkIsFullDay').change(function () {
 			if ($(this).is(':checked')) {
-				$('#divEndDate').hide();
+				$('#divDuration').hide();
 			}
 			else {
-				$('#divEndDate').show();
+				$('#divDuration').show();
 			}
 		});
 
 		function openAddEditForm() {
 			if (selectedEvent != null) {
 				$('#hdEventID').val(selectedEvent.Id);
-				$('#txtSubject').val(selectedEvent.title);
 				$('#txtStart').val(selectedEvent.start.format('DD/MM/YYYY HH:mm A'));
 				$('#chkIsFullDay').prop("checked", selectedEvent.allDay || false);
 				$('#chkIsFullDay').change();
-				$('#txtEnd').val(selectedEvent.end != null ? selectedEvent.end.format('DD/MM/YYYY HH:mm A') : '');
+				$('#txtDuration').val(selectedEvent.end != null ? selectedEvent.end.format('DD/MM/YYYY HH:mm A') : '');
 				$('#txtDescription').val(selectedEvent.description);
 				$('#ddThemeColor').val(selectedEvent.color);
 			}
@@ -286,21 +281,17 @@
 
 		$('#btnSave').click(function () {
 			//Validation/
-			if ($('#txtSubject').val().trim() == "") {
-				alert('Subject required');
-				return;
-			}
 			if ($('#txtStart').val().trim() == "") {
 				alert('Start date required');
 				return;
 			}
-			if ($('#chkIsFullDay').is(':checked') == false && $('#txtEnd').val().trim() == "") {
+			if ($('#chkIsFullDay').is(':checked') == false && $('#txtDuration').val().trim() == "") {
 				alert('End date required');
 				return;
 			}
 			else {
 				var startDate = moment($('#txtStart').val(), "DD/MM/YYYY HH:mm A").toDate();
-				var endDate = moment($('#txtEnd').val(), "DD/MM/YYYY HH:mm A").toDate();
+				var endDate = moment($('#txtDuration').val(), "DD/MM/YYYY HH:mm A").toDate();
 				if (startDate > endDate) {
 					alert('Invalid end date');
 					return;
@@ -312,9 +303,8 @@
 				FuncionarioId: $('#funcionarioSelected').val(),
 				ClienteId: $('#clienteSelected').val(),
 				ProcedimentoId: $('#procedimentoSelected').val(),
-				Subject: $('#txtSubject').val().trim(),
 				Start: $('#txtStart').val().trim(),
-				End: $('#chkIsFullDay').is(':checked') ? null : $('#txtEnd').val().trim(),
+				End: $('#chkIsFullDay').is(':checked') ? null : $('#txtDuration').val().trim(),
 				Description: $('#txtDescription').val(),
 				ThemeColor: $('#ddThemeColor').val(),
 				IsFullDay: $('#chkIsFullDay').is(':checked')

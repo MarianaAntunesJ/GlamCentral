@@ -26,8 +26,6 @@ namespace GlamCentral.Models
         [ForeignKey("ProcedimentoId")]
         public virtual Procedimento Procedimento { get; set; }
 
-        public string Subject { get; set; }
-
         public string Description { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
@@ -39,40 +37,12 @@ namespace GlamCentral.Models
         [Display(Name = "Final")]
         [DataType(DataType.Date)]
         [Required(AllowEmptyStrings = true)]
-        public DateTime End { get; set; }
+        public DateTime Duration { get; set; }
         public string ThemeColor { get; set; }
         public bool IsFullDay { get; set; }
 
         public Agenda()
         {
-        }
-
-        public Agenda(int id, string subject, string description, DateTime start, DateTime end)
-        {
-            Id = id;
-            Subject = subject;
-            Description = description;
-            Start = start;
-            End = end;
-        }
-
-        public Agenda(int id, int clienteId, Cliente cliente, int funcionarioId, Funcionario funcionario, 
-            int procedimentoId, Procedimento procedimento, string subject, string description, 
-            DateTime start, DateTime end, string themeColor, bool isFullDay)
-        {
-            Id = id;
-            ClienteId = clienteId;
-            Cliente = cliente;
-            FuncionarioId = funcionarioId;
-            Funcionario = funcionario;
-            ProcedimentoId = procedimentoId;
-            Procedimento = procedimento;
-            Subject = subject;
-            Description = description;
-            Start = start;
-            End = end;
-            ThemeColor = themeColor;
-            IsFullDay = isFullDay;
         }
     }
 }
