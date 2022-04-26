@@ -17,16 +17,22 @@ namespace GlamCentral.Areas.Funcionario.Controllers
     [FuncionarioAutorizacao((int)CargoFuncionario.Estoquista)]
     public class ProdutoController : Controller
     {
+        #region "Propriedades Privadas"
         private IProdutoRepository _repository;
         private ICategoriaRepository _categoriaRepository;
         private IImagemRepository _imagemRepository;
+        #endregion
 
+        #region "Construtor"
         public ProdutoController(IProdutoRepository respository, ICategoriaRepository categoriaRepository, IImagemRepository imagemRepository)
         {
             _repository = respository;
             _categoriaRepository = categoriaRepository;
             _imagemRepository = imagemRepository;
         }
+        #endregion
+
+        #region "GET - Métodos publicos" 
 
         // Todo: conferir para ver se é uma troca melhor para ViewBag/ViewData
         public IActionResult Index(int? pagina, string pesquisa, string status = "True", string ordenacao = "A")
@@ -39,10 +45,59 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         [HttpGet]
         public IActionResult Cadastrar()
         {
-            ViewBag.Categorias = _categoriaRepository.ObterTodasCategorias().Select(a => new SelectListItem(a.Nome, a.Id.ToString()));            
+            ViewBag.Categorias = _categoriaRepository.ObterTodasCategorias().Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
             ViewBag.TipoPeso = TipoPeso.ObterTiposPesos().Select(a => new SelectListItem(a, a));
             return View();
         }
+
+        [HttpGet]
+        public IActionResult Atualizar(int id)
+        {
+            ViewBag.Categorias = _categoriaRepository.ObterTodasCategorias().Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+            ViewBag.TipoPeso = TipoPeso.ObterTiposPesos().Select(a => new SelectListItem(a, a));
+
+            return View(_repository.ObterProduto(id));
+        }
+
+
+        [ValidateHttpReferer]
+        public IActionResult GerenciarStatus(int id)
+        {
+            var produto = _repository.ObterProduto(id);
+
+            GerenciadorArquivo.ExcluirImagensProduto(produto.Imagens.ToList());
+            _imagemRepository.ExcluirImagensDoProduto(id);
+
+            produto.Status = !produto.Status;
+            _repository.Atualizar(produto);
+            TempData["MSG_S"] = Mensagem.MSG_S;
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        [Route("/Produto/Categoria/{slug}")]
+        public IActionResult ListagemCategoria(string slug)
+        {
+            var categoriaPrincipal = _categoriaRepository.ObterCategoria(slug);
+            var lista = GetCategorias(_categoriaRepository.ObterTodasCategorias().ToList(), categoriaPrincipal);
+            return View();
+        }
+        private List<Categoria> GetCategorias(List<Categoria> categorias, Categoria categoriaPrincipal)
+        {
+            /*if(categorias.Where(_ => _.CategoriaPaiID = categoriaPrincipal.Id).Count() > 0)
+            {
+
+            }*/
+            return null;
+        }
+
+        public IActionResult Produtos(int? pagina, string pesquisa, string status = "True", string ordenacao = "A")
+        {
+            //var statusBool = Convert.ToBoolean(status);
+            //return View(new IndexViewModel(_repository.ObterTodosProdutos(pagina, pesquisa, ordenacao, statusBool)));
+            return View();
+        } 
+        #endregion
 
         [HttpPost]
         public IActionResult Cadastrar([FromForm] Produto produto)
@@ -67,16 +122,7 @@ namespace GlamCentral.Areas.Funcionario.Controllers
 
                 return View(produto);
             }            
-        }
-
-        [HttpGet]
-        public IActionResult Atualizar(int id)
-        {
-            ViewBag.Categorias = _categoriaRepository.ObterTodasCategorias().Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
-            ViewBag.TipoPeso = TipoPeso.ObterTiposPesos().Select(a => new SelectListItem(a, a));
-
-            return View(_repository.ObterProduto(id));
-        }
+        }        
 
         [HttpPost]
         public IActionResult Atualizar([FromForm] Produto produto, int id)
@@ -103,37 +149,6 @@ namespace GlamCentral.Areas.Funcionario.Controllers
 
                 return View(produto);
             }
-        }
-        
-        [ValidateHttpReferer]
-        public IActionResult GerenciarStatus(int id)
-        {
-            var produto = _repository.ObterProduto(id);
-
-            GerenciadorArquivo.ExcluirImagensProduto(produto.Imagens.ToList());
-            _imagemRepository.ExcluirImagensDoProduto(id);
-
-            produto.Status = !produto.Status;
-            _repository.Atualizar(produto);
-            TempData["MSG_S"] = Mensagem.MSG_S;
-            return RedirectToAction(nameof(Index));
-        }     
-        
-        [HttpGet]
-        [Route("/Produto/Categoria/{slug}")]
-        public IActionResult ListagemCategoria(string slug)
-        {
-            var categoriaPrincipal = _categoriaRepository.ObterCategoria(slug);
-            var lista = GetCategorias(_categoriaRepository.ObterTodasCategorias().ToList(), categoriaPrincipal);
-            return View();
-        }
-        private List<Categoria> GetCategorias(List<Categoria> categorias, Categoria categoriaPrincipal)
-        {
-            /*if(categorias.Where(_ => _.CategoriaPaiID = categoriaPrincipal.Id).Count() > 0)
-            {
-
-            }*/
-            return null;
-        }
+        }        
     }
 }

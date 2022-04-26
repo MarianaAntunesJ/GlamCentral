@@ -14,6 +14,7 @@ namespace GlamCentral.Repository.Interfaces
         void Excluir(int id);
         Funcionario ObterFuncionario(int id);
         List<Funcionario> ObterFuncionarioPorEmail(string email);
+        IEnumerable<Funcionario> ObterTodosFuncionarios();
         IPagedList<Funcionario> ObterTodosFuncionarios(int? pagina, string pesquisa);
         IPagedList<Funcionario> ObterTodosFuncionarios(int? pagina, string pesquisa, string ordenacao);
         IPagedList<Funcionario> ObterTodosFuncionarios(int? pagina, string pesquisa, string ordenacao, bool status);

@@ -7,9 +7,7 @@ using GlamCentral.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace GlamCentral.Areas.Funcionario.Controllers
 {
@@ -17,15 +15,20 @@ namespace GlamCentral.Areas.Funcionario.Controllers
     [FuncionarioAutorizacao((int)CargoFuncionario.Cabelereiro)]
     public class ProcedimentoController : Microsoft.AspNetCore.Mvc.Controller
     {
+        #region "Propriedades Privadas"
         private IProcedimentoRepository _repository;
         private IProdutoRepository _produtoRepository;
+        #endregion
 
+        #region "Construtor"
         public ProcedimentoController(IProcedimentoRepository respository, IProdutoRepository produtoRepository)
         {
             _repository = respository;
             _produtoRepository = produtoRepository;
         }
+        #endregion
 
+        #region "GET - Métodos publicos" 
         // Todo: conferir para ver se é uma troca melhor para ViewBag/ViewData
         public IActionResult Index(int? pagina, string pesquisa, string status = "True", string ordenacao = "A")
         {
@@ -39,6 +42,25 @@ namespace GlamCentral.Areas.Funcionario.Controllers
             ViewBag.Produtos = _produtoRepository.ObterTodosProdutos().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
             return View();
         }
+
+        [HttpGet]
+        public IActionResult Atualizar(int id)
+        {
+            ViewBag.Produtos = _produtoRepository.ObterTodosProdutos().Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+            return View(_repository.ObterProcedimento(id));
+        }
+
+        [ValidateHttpReferer]
+        public IActionResult GerenciarStatus(int id)
+        {
+            var procedimento = _repository.ObterProcedimento(id);
+
+            procedimento.Status = !procedimento.Status;
+            _repository.Atualizar(procedimento);
+            TempData["MSG_S"] = Mensagem.MSG_S;
+            return RedirectToAction(nameof(Index));
+        } 
+        #endregion
 
         [HttpPost]
         public IActionResult Cadastrar([FromForm] Procedimento procedimento)
@@ -57,14 +79,7 @@ namespace GlamCentral.Areas.Funcionario.Controllers
                 ViewBag.Produtos = _produtoRepository.ObterTodosProdutos().Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
                 return View(procedimento);
             }
-        }
-
-        [HttpGet]
-        public IActionResult Atualizar(int id)
-        {
-            ViewBag.Produtos = _produtoRepository.ObterTodosProdutos().Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
-            return View(_repository.ObterProcedimento(id));
-        }
+        }        
 
         [HttpPost]
         public IActionResult Atualizar([FromForm] Procedimento procedimento, int id)
@@ -83,17 +98,6 @@ namespace GlamCentral.Areas.Funcionario.Controllers
                 ViewBag.Produtos = _produtoRepository.ObterTodosProdutos().Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
                 return View(procedimento);
             }
-        }
-
-        [ValidateHttpReferer]
-        public IActionResult GerenciarStatus(int id)
-        {
-            var procedimento = _repository.ObterProcedimento(id);
-
-            procedimento.Status = !procedimento.Status;
-            _repository.Atualizar(procedimento);
-            TempData["MSG_S"] = Mensagem.MSG_S;
-            return RedirectToAction(nameof(Index));
-        }
+        }     
     }
 }

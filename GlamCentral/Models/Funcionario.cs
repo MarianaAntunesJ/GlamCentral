@@ -11,7 +11,6 @@ namespace GlamCentral.Models
     {
         #region "Propriedades Públicas"
         // Todo: refazer verificações: colocar as que faltam ou mudar de lugar
-        [Required(AllowEmptyStrings = false)]
         public int Id { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E_Obrigatorio")]

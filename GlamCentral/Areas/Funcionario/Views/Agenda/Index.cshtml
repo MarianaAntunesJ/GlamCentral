@@ -1,4 +1,5 @@
-﻿@{
+﻿@model GlamCentral.Models.Agenda
+@{
 	ViewBag.Title = "Agenda";
 }
 
@@ -55,14 +56,37 @@
 						<label>Assunto</label>
 						<input type="text" id="txtSubject" class="form-control" />
 					</div>
+					<div class="form-group col-md-6">
+						<label asp-for="FuncionarioId"></label>
+						<select asp-for="FuncionarioId" class="form-control" id="funcionarioSelected" asp-items="@ViewBag.Funcionarios">
+							<option value="">Selecione ...</option>
+						</select>
+						<span asp-validation-for="FuncionarioId" class="text-danger"></span>
+					</div>
+					<div class="form-group col-md-6">
+						<label asp-for="ClienteId"></label>
+						<select asp-for="ClienteId" class="form-control" id="clienteSelected" asp-items="@ViewBag.Clientes">
+							<option value="">Selecione ...</option>
+						</select>
+						<span asp-validation-for="ClienteId" class="text-danger"></span>
+					</div>
+					<div class="form-group col-md-6">
+						<label asp-for="ProcedimentoId"></label>
+						<select asp-for="ProcedimentoId" class="form-control" id="procedimentoSelected" asp-items="@ViewBag.Procedimentos">
+							<option value="">Selecione ...</option>
+						</select>
+						<span asp-validation-for="ProcedimentoId" class="text-danger"></span>
+					</div>
 					<div class="form-group">
 						<label>Início</label>
-						<div class="input-group date" id="dtp1">
-							<input type="text" id="txtStart" class="form-control" />
+						@*<div class="input-group date" id="dtp1">*@
+						<input asp-for="Start" id="txtStart" class="form-control" placeholder="dd/mm/aaaa">
+						<span asp-validation-for="Start" class="text-danger"></span>
+						@*<input type="text" id="txtStart" class="form-control" />
 							<span class="input-group-addon">
-								<span class="glyphicon glyphicon-calendar"></span>
-							</span>
-						</div>
+							<span class="glyphicon glyphicon-calendar"></span>
+							</span>*@
+						@*</div>*@
 					</div>
 					<div class="form-group">
 						<div class="checkbox">
@@ -71,12 +95,13 @@
 					</div>
 					<div class="form-group" id="divEndDate" style="display:none">
 						<label>Fim</label>
-						<div class="input-group date" id="dtp2">
-							<input type="text" id="txtEnd" class="form-control" />
-							<span class="input-group-addon">
-								<span class="glyphicon glyphicon-calendar"></span>
+						@*<div class="input-group date" id="dtp2">*@
+						<input asp-for="End" id="txtEnd" class="form-control" placeholder="dd/mm/aaaa">
+						<span asp-validation-for="End" class="text-danger"></span>
+						@*<span class="input-group-addon">
+							<span class="glyphicon glyphicon-calendar"></span>
 							</span>
-						</div>
+							</div>*@
 					</div>
 					<div class="form-group">
 						<label>Descrição</label>
@@ -231,9 +256,9 @@
 		}
 		})
 
-		$('#dtp1,#dtp2').datetimepicker({
-			format: 'DD/MM/YYYY HH:mm A'
-		});
+		//$('#dtp1,#dtp2').datetimepicker({
+		//	format: 'DD/MM/YYYY HH:mm A'
+		//});
 
 		$('#chkIsFullDay').change(function () {
 			if ($(this).is(':checked')) {
@@ -284,6 +309,9 @@
 
 			var data = {
 				Id: $('#hdEventID').val(),
+				FuncionarioId: $('#funcionarioSelected').val(),
+				ClienteId: $('#clienteSelected').val(),
+				ProcedimentoId: $('#procedimentoSelected').val(),
 				Subject: $('#txtSubject').val().trim(),
 				Start: $('#txtStart').val().trim(),
 				End: $('#chkIsFullDay').is(':checked') ? null : $('#txtEnd').val().trim(),

@@ -48,6 +48,9 @@ namespace GlamCentral.Repository
         public Procedimento ObterProcedimento(int id)
             => _banco.Procedimentos.OrderBy(_ => _.Nome).Where(_ => _.Id == id).FirstOrDefault();
 
+        public IEnumerable<Procedimento> ObterTodosProcedimentos()
+        => _banco.Procedimentos;
+
         public IPagedList<Procedimento> ObterTodosProcedimentos(int? pagina, string pesquisa)
         {
             return ObterTodosProcedimentos(pagina, pesquisa, "A");
@@ -87,6 +90,25 @@ namespace GlamCentral.Repository
                 bancoProcedimento = bancoProcedimento.OrderBy(_ => _.Id);
 
             return bancoProcedimento.ToPagedList<Procedimento>(NumeroPagina, registroPorPagina);
+        }
+
+        public IPagedList<Produto> ObterTodosProdutos(int? pagina, string pesquisa, string ordenacao, bool status)
+        {
+            int registroPorPagina = _conf.GetValue<int>("RegistroPorPagina");
+            int NumeroPagina = pagina ?? 1;
+
+            var bancoProcedimento = _banco.Produtos.AsQueryable();
+            if (!string.IsNullOrEmpty(pesquisa))
+                bancoProcedimento = bancoProcedimento.Where(_ => _.Nome.Contains(pesquisa.Trim()));
+
+            bancoProcedimento = bancoProcedimento.Where(_ => _.Status == status);
+
+            if (ordenacao == "A")
+                bancoProcedimento = bancoProcedimento.OrderBy(_ => _.Nome);
+            else if (ordenacao == "ID")
+                bancoProcedimento = bancoProcedimento.OrderBy(_ => _.Id);
+
+            return bancoProcedimento.ToPagedList<Produto>(NumeroPagina, registroPorPagina);
         }
         #endregion
     }

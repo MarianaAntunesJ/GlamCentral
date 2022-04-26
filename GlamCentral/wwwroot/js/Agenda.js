@@ -1,5 +1,5 @@
 ﻿navbarDropdownAgenda.onclick = function () {
-    window.location.href = "https://localhost:44375/Funcionario/Agenda/Index";
+   window.location.href = "https://localhost:44375/Funcionario/Agenda/Index";
 };
 
 /*btnSave.click(function () {

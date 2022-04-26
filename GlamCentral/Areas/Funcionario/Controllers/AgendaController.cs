@@ -1,10 +1,7 @@
-﻿using GlamCentral.Libraries.Filter;
-using GlamCentral.Models;
-using GlamCentral.Models.Enums;
+﻿using GlamCentral.Models;
 using GlamCentral.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
 
 namespace GlamCentral.Areas.Funcionario.Controllers
@@ -13,16 +10,31 @@ namespace GlamCentral.Areas.Funcionario.Controllers
     //[FuncionarioAutorizacao((int)CargoFuncionario.Gerente)]
     public class AgendaController : Controller
     {
+        #region "Propriedades Privadas"
         private IAgendaRepository _repository;
+        private IFuncionarioRepository _funcionarioRepository;
+        private IClienteRepository _clienteRepository;
+        private IProcedimentoRepository _procedimentoRepository;
+        #endregion
 
-        public AgendaController(IAgendaRepository respository)
+        #region "Construtores"
+        public AgendaController(IAgendaRepository repository, IFuncionarioRepository funcionarioRepository,
+            IClienteRepository clienteRepository, IProcedimentoRepository procedimentoRepository)
         {
-            _repository = respository;
-
+            _repository = repository;
+            _funcionarioRepository = funcionarioRepository;
+            _clienteRepository = clienteRepository;
+            _procedimentoRepository = procedimentoRepository;
         }
+        #endregion
+
+        #region "GET - Métodos publicos"        
 
         public IActionResult Index()
         {
+            ViewBag.Funcionarios = _funcionarioRepository.ObterTodosFuncionarios().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+            ViewBag.Clientes = _clienteRepository.ObterTodosClientes().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+            ViewBag.Procedimentos = _procedimentoRepository.ObterTodosProcedimentos().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
             return View();
         }
 
@@ -58,12 +70,36 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         return new JsonResult(lista);
                 }*/
 
+        [HttpGet]
+        public IActionResult Cadastrar()
+        {
+            ViewBag.Funcionarios = _funcionarioRepository.ObterTodosFuncionarios().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+            ViewBag.Clientes = _clienteRepository.ObterTodosClientes().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+            ViewBag.Procedimentos = _procedimentoRepository.ObterTodosProcedimentos().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+            return View();
+        }
+
+        #endregion
+
+
+        #region "POST - Métodos Públicos"
         [HttpPost]
         public JsonResult Cadastrar(Agenda agenda)
         {
             var status = false;
-            if (_repository.Cadastrar(agenda))
-                status = true;
+
+            ModelState.Remove("Id");
+            if (ModelState.IsValid)
+            {
+                if (_repository.Cadastrar(agenda))
+                    status = true;
+            }
+            else
+            {
+                ViewBag.Funcionarios = _funcionarioRepository.ObterTodosFuncionarios().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+                ViewBag.Clientes = _clienteRepository.ObterTodosClientes().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+                ViewBag.Procedimentos = _procedimentoRepository.ObterTodosProcedimentos().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+            }
 
             return new JsonResult(status);
         }
@@ -77,17 +113,6 @@ namespace GlamCentral.Areas.Funcionario.Controllers
 
             return new JsonResult(status);
         }
-    }
-
-    public class Teste
-    {
-        public int EventID { get; set; }
-        public string Subject { get; set; }
-        public string Description { get; set; }
-        public System.DateTime Start { get; set; }
-        public Nullable<System.DateTime> End { get; set; }
-        public string ThemeColor { get; set; }
-        public bool IsFullDay { get; set; }
-        public string A { get; set; }
+        #endregion
     }
 }

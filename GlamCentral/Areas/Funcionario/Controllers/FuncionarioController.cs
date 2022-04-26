@@ -15,16 +15,20 @@ namespace GlamCentral.Areas.Funcionario.Controllers
     [FuncionarioAutorizacao((int)CargoFuncionario.Gerente)]
     public class FuncionarioController : Controller
     {
+        #region "Propriedades Privadas"
         private IFuncionarioRepository _repository;
         private GerenciarEmail _gerenciarEmail;
         private LoginFuncionario _loginFuncionario;
+        #endregion
 
+        #region "Construtor"
         public FuncionarioController(IFuncionarioRepository respository, GerenciarEmail gerenciarEmail, LoginFuncionario loginFuncionario)
         {
             _repository = respository;
             _gerenciarEmail = gerenciarEmail;
             _loginFuncionario = loginFuncionario;
-        }
+        } 
+        #endregion
 
         public IActionResult Index(int? pagina, string pesquisa, string status = "True", string ordenacao = "A")
         {

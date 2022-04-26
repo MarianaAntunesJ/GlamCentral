@@ -49,51 +49,6 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         {
             return View();
         }
-        #endregion
-
-        #region "Login"
-        public IActionResult Login()
-        {
-            ViewBag.ShowTopBar = false;
-            return View();
-        }
-
-        [ValidateHttpReferer]
-        public IActionResult Logout()
-        {
-            _loginFuncionario.Logout();
-            return RedirectToAction("Login", "Home");
-        }
-
-        public IActionResult RecuperarSenha()
-        {
-            ViewBag.ShowTopBar = false;
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Login([FromForm] Models.Funcionario funcionario)
-        {
-            ViewBag.ShowTopBar = false;
-            var funcionarioDB = _funcionarioRepository.Login(funcionario.Email, funcionario.Senha);
-            if (funcionarioDB != null)
-            {
-                if (funcionarioDB.Status == false)
-                {
-                    ViewData["MSG_E"] = "Usuário inativo. Utilize um usuário que esteja ativo no sistema.";
-                    return View();
-                }
-
-                _loginFuncionario.Login(funcionarioDB);
-                //return new RedirectResult(Url.Action(nameof(Painel)));
-                return new RedirectResult(Url.Action(nameof(Painel)));
-            }
-            else
-            {
-                ViewData["MSG_E"] = "Usuário não encontrado. Verifique E-mail e Senha digitados, e tente novamente.";
-                return View();
-            }
-        }
 
         // Todo: recuperar senha
         [HttpGet]
@@ -122,8 +77,53 @@ namespace GlamCentral.Areas.Funcionario.Controllers
                 EmailRecuperarSenha(email);
             }
         }
+        #endregion
+
+        #region "Login"
+        public IActionResult Login()
+        {
+            ViewBag.ShowTopBar = false;
+            return View();
+        }
+
+        [ValidateHttpReferer]
+        public IActionResult Logout()
+        {
+            _loginFuncionario.Logout();
+            return RedirectToAction("Login", "Home");
+        }
+
+        public IActionResult RecuperarSenha()
+        {
+            ViewBag.ShowTopBar = false;
+            return View();
+        }
 
         #endregion
+
+        [HttpPost]
+        public IActionResult Login([FromForm] Models.Funcionario funcionario)
+        {
+            ViewBag.ShowTopBar = false;
+            var funcionarioDB = _funcionarioRepository.Login(funcionario.Email, funcionario.Senha);
+            if (funcionarioDB != null)
+            {
+                if (funcionarioDB.Status == false)
+                {
+                    ViewData["MSG_E"] = "Usuário inativo. Utilize um usuário que esteja ativo no sistema.";
+                    return View();
+                }
+
+                _loginFuncionario.Login(funcionarioDB);
+                //return new RedirectResult(Url.Action(nameof(Painel)));
+                return new RedirectResult(Url.Action(nameof(Painel)));
+            }
+            else
+            {
+                ViewData["MSG_E"] = "Usuário não encontrado. Verifique E-mail e Senha digitados, e tente novamente.";
+                return View();
+            }
+        }
         // Todo: tirar grafico, relatorio e dados da empresa da home controller
         #region "Tirar"
         //[ValidateHttpReferer]
