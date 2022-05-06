@@ -4,14 +4,16 @@ using GlamCentral.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GlamCentral.Migrations
 {
     [DbContext(typeof(GCContext))]
-    partial class GCContextModelSnapshot : ModelSnapshot
+    [Migration("20220427002916_ProcedimentoDuracao")]
+    partial class ProcedimentoDuracao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -237,6 +239,9 @@ namespace GlamCentral.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ProdutosId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
@@ -244,6 +249,8 @@ namespace GlamCentral.Migrations
                         .HasColumnType("real");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProdutosId");
 
                     b.ToTable("Procedimentos");
                 });
@@ -280,21 +287,6 @@ namespace GlamCentral.Migrations
                     b.HasIndex("CategoriaId");
 
                     b.ToTable("Produtos");
-                });
-
-            modelBuilder.Entity("GlamCentral.Models.ProdutosDeProcedimento", b =>
-                {
-                    b.Property<int>("ProdutoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProcedimentoId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProdutoId", "ProcedimentoId");
-
-                    b.HasIndex("ProcedimentoId");
-
-                    b.ToTable("ProdutosDeProcedimento");
                 });
 
             modelBuilder.Entity("GlamCentral.Models.Agenda", b =>
@@ -344,6 +336,17 @@ namespace GlamCentral.Migrations
                     b.Navigation("Produto");
                 });
 
+            modelBuilder.Entity("GlamCentral.Models.Procedimento", b =>
+                {
+                    b.HasOne("GlamCentral.Models.Produto", "Produtos")
+                        .WithMany()
+                        .HasForeignKey("ProdutosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Produtos");
+                });
+
             modelBuilder.Entity("GlamCentral.Models.Produto", b =>
                 {
                     b.HasOne("GlamCentral.Models.Categoria", "Categoria")
@@ -355,35 +358,9 @@ namespace GlamCentral.Migrations
                     b.Navigation("Categoria");
                 });
 
-            modelBuilder.Entity("GlamCentral.Models.ProdutosDeProcedimento", b =>
-                {
-                    b.HasOne("GlamCentral.Models.Procedimento", "Procedimento")
-                        .WithMany("Produtos")
-                        .HasForeignKey("ProcedimentoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GlamCentral.Models.Produto", "Produto")
-                        .WithMany("Procedimentos")
-                        .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Procedimento");
-
-                    b.Navigation("Produto");
-                });
-
-            modelBuilder.Entity("GlamCentral.Models.Procedimento", b =>
-                {
-                    b.Navigation("Produtos");
-                });
-
             modelBuilder.Entity("GlamCentral.Models.Produto", b =>
                 {
                     b.Navigation("Imagens");
-
-                    b.Navigation("Procedimentos");
                 });
 #pragma warning restore 612, 618
         }

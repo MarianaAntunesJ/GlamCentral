@@ -2,6 +2,7 @@
 using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace GlamCentral.Models
         public string Nome { get; set; }
                 
         [Required(ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E_Obrigatorio")]
-        public String Duracao { get; set; }
+        public int Duracao { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E_Obrigatorio")]
         public float Valor { get; set; }
@@ -25,10 +26,28 @@ namespace GlamCentral.Models
         [Required(ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E_Obrigatorio")]
         public bool Status { get; set; }
 
-        [Display(Name = "Produtos")]
-        public int ProdutosId { get; set; }
+        public virtual List<ProdutosDeProcedimento> Produtos { get; set; }
 
-        [ForeignKey("ProdutosId")]
-        public virtual Produto Produtos { get; set; }
+		public Procedimento()
+		{
+            Produtos = new List<ProdutosDeProcedimento>();
+		}
+
+        public void AdicionaProdutos(List<Produto> produtos)
+        {
+            var produtosProcedimento = produtos.Select(_ => (new ProdutosDeProcedimento(_, this))).ToList();
+            Produtos.AddRange(produtosProcedimento);
+        }
+
+        public void AdicionaProdutosId(List<Produto> produtos)
+        {
+            var produtosProcedimento = produtos.Select(_ => (new ProdutosDeProcedimento(_.Id, this.Id))).ToList();
+            Produtos.AddRange(produtosProcedimento);
+        }
+
+        public void InsereDuracao(int horas, int minutos)
+        {
+            Duracao = minutos + (horas * 60);
+        }
     }
 }

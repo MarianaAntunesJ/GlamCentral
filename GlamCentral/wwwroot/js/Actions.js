@@ -11,6 +11,7 @@
     SelecionaDropDownOrd();
 });
 
+
 function Pergunta() {
     $(".btn-red").click(function (e) {
         var resultado = confirm("Tem certeza que deseja realizar esta operação?");

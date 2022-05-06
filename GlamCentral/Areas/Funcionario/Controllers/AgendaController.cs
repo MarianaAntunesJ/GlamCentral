@@ -2,6 +2,8 @@
 using GlamCentral.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace GlamCentral.Areas.Funcionario.Controllers
@@ -32,9 +34,21 @@ namespace GlamCentral.Areas.Funcionario.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.Funcionarios = _funcionarioRepository.ObterTodosFuncionarios().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
-            ViewBag.Clientes = _clienteRepository.ObterTodosClientes().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
-            ViewBag.Procedimentos = _procedimentoRepository.ObterTodosProcedimentos().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+            ViewBag.Funcionarios = _funcionarioRepository.ObterTodosFuncionarios().OrderBy(_ => _.Nome)
+                .Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+
+            ViewBag.Clientes = _clienteRepository.ObterTodosClientes().OrderBy(_ => _.Nome)
+                .Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+
+            ViewBag.Procedimentos = _procedimentoRepository.ObterTodosProcedimentos().OrderBy(_ => _.Nome)
+                .Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+
+            ViewBag.Data = DateTime.Now.ToString("dd/MM/yyyy");
+            var horas = new List<int>() { 08, 09, 10, 11, 12, 13, 14, 15, 16, 17 };
+            ViewBag.Horas = horas.Select(h => new SelectListItem(h.ToString(), h.ToString()));
+            var minutos = new List<int>() { 00, 05, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55 };
+            ViewBag.Minutos = minutos.Select(m => new SelectListItem(m.ToString(), m.ToString()));
+
             return View();
         }
 
@@ -73,9 +87,14 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         [HttpGet]
         public IActionResult Cadastrar()
         {
-            ViewBag.Funcionarios = _funcionarioRepository.ObterTodosFuncionarios().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
-            ViewBag.Clientes = _clienteRepository.ObterTodosClientes().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
-            ViewBag.Procedimentos = _procedimentoRepository.ObterTodosProcedimentos().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+            ViewBag.Funcionarios = _funcionarioRepository.ObterTodosFuncionarios().OrderBy(_ => _.Nome)
+                .Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+
+            ViewBag.Clientes = _clienteRepository.ObterTodosClientes().OrderBy(_ => _.Nome)
+                .Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+
+            ViewBag.Procedimentos = _procedimentoRepository.ObterTodosProcedimentos().OrderBy(_ => _.Nome)
+                .Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
             return View();
         }
 
@@ -84,10 +103,11 @@ namespace GlamCentral.Areas.Funcionario.Controllers
 
         #region "POST - Métodos Públicos"
         [HttpPost]
-        public JsonResult Cadastrar(Agenda agenda)
+        public JsonResult Cadastrar(Agenda agenda, int Horas, int Minutos)
         {
             var status = false;
 
+            agenda.Start = new DateTime(agenda.Start.Year, agenda.Start.Month, agenda.Start.Day, Horas, Minutos, 0);
             ModelState.Remove("Id");
             if (ModelState.IsValid)
             {
@@ -96,9 +116,14 @@ namespace GlamCentral.Areas.Funcionario.Controllers
             }
             else
             {
-                ViewBag.Funcionarios = _funcionarioRepository.ObterTodosFuncionarios().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
-                ViewBag.Clientes = _clienteRepository.ObterTodosClientes().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
-                ViewBag.Procedimentos = _procedimentoRepository.ObterTodosProcedimentos().OrderBy(_ => _.Nome).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+                ViewBag.Funcionarios = _funcionarioRepository.ObterTodosFuncionarios().OrderBy(_ => _.Nome)
+                    .Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+
+                ViewBag.Clientes = _clienteRepository.ObterTodosClientes().OrderBy(_ => _.Nome)
+                    .Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
+
+                ViewBag.Procedimentos = _procedimentoRepository.ObterTodosProcedimentos().OrderBy(_ => _.Nome)
+                    .Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
             }
 
             return new JsonResult(status);
@@ -112,6 +137,25 @@ namespace GlamCentral.Areas.Funcionario.Controllers
                 status = true;
 
             return new JsonResult(status);
+        }
+
+        [HttpPost]
+        public JsonResult Duracao(IEnumerable<string> id)
+        {            
+            if (id.First() != null)
+			{
+                var idProc = int.Parse(id.First());
+
+                if (idProc != 0)
+                {
+                    var procedimento = _procedimentoRepository.ObterProcedimento(idProc);
+                    var duracao = procedimento.Duracao;
+                    if (duracao > 0)
+                        return new JsonResult(duracao);
+                }
+            }
+            
+			return new JsonResult(null);
         }
         #endregion
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -28,16 +29,17 @@ namespace GlamCentral.Models
 
         public string Description { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        [Display(Name = "Início")]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
+        [Display(Name = "Data")]
         public DateTime Start { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        [Display(Name = "Final")]
-        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:HH:mm}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Duração")]
+        [DataType(DataType.Time)]
         [Required(AllowEmptyStrings = true)]
         public DateTime Duration { get; set; }
+
         public string ThemeColor { get; set; }
         public bool IsFullDay { get; set; }
 

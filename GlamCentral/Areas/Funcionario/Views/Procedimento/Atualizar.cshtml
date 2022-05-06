@@ -1,7 +1,7 @@
 ﻿@model GlamCentral.Models.Procedimento
 
 @{
-    ViewData["Title"] = "Cadastrar Procedimento";
+    ViewData["Title"] = "Editar Procedimento";
 }
 
 <div col-md-4>
@@ -10,7 +10,7 @@
     <br />
     <h1 class="title-generic">@ViewData["Title"]</h1>
     <br />
-    <form method="post">
+    <form asp-controller="Procedimento" asp-action="Atualizar" method="post">
         <input type="hidden" asp-for="Id" />
         <div class="form-group">
             <label asp-for="Nome"></label>
@@ -18,20 +18,15 @@
             <span asp-validation-for="Nome" class="text-danger"></span>
         </div>
 
-        <div class="form-group col-md-6">
-            <label asp-for="ProdutosId"></label>
-            <select asp-for="ProdutosId" class="form-control" asp-items="@ViewBag.Produtos">
-                <option value="">Selecione</option>
-            </select>
-            <span asp-validation-for="ProdutosId" class="text-danger"></span>
-        </div>
-
         <div class="form-group in-row col-md-20">
-            <div class="form-group col-md-3">
-                <label asp-for="Duracao"></label>
-                <input asp-for="Duracao" class="form-control" onclick="$(this).mask('00:00')" placeholder="0">
-                <span asp-validation-for="Duracao" class="text-danger"></span>
-            </div>
+            <div class="form-group col-md-2">
+				<label>hora</label>
+				<select name="horas" class="form-control" asp-items="@ViewBag.Horas">
+				</select>
+				<label>minuto</label>
+				<select name="minutos" class="form-control" asp-items="@ViewBag.Minutos">
+				</select>
+			</div>
             <div class="form-group col-md-3">
                 <div style="margin-left: 30px;">
                     <div class="form-group col-md-12">
@@ -52,5 +47,9 @@
             <input asp-for="Status" type="checkbox" class="bigger-checkbox" checked="checked" />
         </div>
         <button type="submit" class="btn btn-primary btn-default btn-blue">Salvar</button> <a asp-action="Index" class="btn btn-info">Voltar</a>
+
+        <div>
+			<button type="submit" style="margin-left: 400px;" asp-action="ListagemProdutos" asp-controller="Procedimento" class="btn btn-primary btn-default btn-green">Produtos</button>
+		</div>
     </form>
 </div>

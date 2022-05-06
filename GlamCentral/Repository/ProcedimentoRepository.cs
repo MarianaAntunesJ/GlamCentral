@@ -30,8 +30,24 @@ namespace GlamCentral.Repository
         #region "Métodos Públicos"
         public void Cadastrar(Procedimento procedimento)
         {
+            var a = ObterProdutosPorId(procedimento.Produtos.Select(_ => _.Produto.Id).ToList()).ToList();
+            procedimento.Produtos.Clear();
+            procedimento.AdicionaProdutos(a);
             _banco.Add(procedimento);
             _banco.SaveChanges();
+            //CadastrarA(procedimento.Produtos.Select(_ => _.Produto).ToList(), procedimento);
+        }
+
+        private void CadastrarA(List<Produto> produtos, Procedimento procedimento)
+        {
+            var produtosDeProcedimento = produtos.Select(_ => (new ProdutosDeProcedimento(_.Id, _, procedimento.Id, procedimento))).ToList();
+            _banco.AddRange(produtosDeProcedimento);
+            _banco.SaveChanges();
+        }
+
+        private IEnumerable<Produto> ObterProdutosPorId(List<int> ids)
+        {
+            return _banco.Produtos.Where(_ => ids.Contains(_.Id));
         }
 
         public void Atualizar(Procedimento procedimento)

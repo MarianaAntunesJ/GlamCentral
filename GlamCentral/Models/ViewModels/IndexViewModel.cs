@@ -20,6 +20,11 @@ namespace GlamCentral.Models.ViewModels
         public Procedimento Procedimento { get; set; }
         public Empresa Empresa { get; set; }
 
+        public IndexViewModel()
+        {
+
+        }
+
         public List<SelectListItem> Ordenacao
         {
             get
@@ -91,6 +96,7 @@ namespace GlamCentral.Models.ViewModels
         public IndexViewModel(IList<Cliente> clientesList)
         {
             ClientesList = clientesList;
-        }
+        }       
+        
     }
 }
