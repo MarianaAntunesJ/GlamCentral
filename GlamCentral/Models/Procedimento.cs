@@ -39,6 +39,16 @@ namespace GlamCentral.Models
             Produtos.AddRange(produtosProcedimento);
         }
 
+        public List<Produto> Getprodutos(List<ProdutosDeProcedimento> produtosprocedimento)
+        {
+            var produtos = new List<Produto>();
+            foreach (var produtoprocedimento in produtosprocedimento)
+            {
+                produtos.Add(produtoprocedimento.Produto);
+            }
+            return produtos;
+        }
+
         public void AdicionaProdutosId(List<Produto> produtos)
         {
             var produtosProcedimento = produtos.Select(_ => (new ProdutosDeProcedimento(_.Id, this.Id))).ToList();

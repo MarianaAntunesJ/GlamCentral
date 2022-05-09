@@ -10,11 +10,12 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using X.PagedList;
 
 namespace GlamCentral.Areas.Funcionario.Controllers
 {
     [Area("Funcionario")]
-    //[FuncionarioAutorizacao((int)CargoFuncionario.Cabelereiro)]
+    [FuncionarioAutorizacao((int)CargoFuncionario.Cabelereiro)]
     public class ProcedimentoController : Microsoft.AspNetCore.Mvc.Controller
     {
         #region "Propriedades Privadas"
@@ -31,7 +32,6 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         #endregion
 
         #region "GET - Métodos publicos" 
-        // Todo: conferir para ver se é uma troca melhor para ViewBag/ViewData
         public IActionResult Index(int? pagina, string pesquisa, string status = "True", string ordenacao = "A")
         {
             var statusBool = Convert.ToBoolean(status);
@@ -39,32 +39,31 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         }
 
         [HttpGet]
-        public IActionResult Cadastrar(List<int> produtos)
+        public IActionResult Cadastrar(int? pagina)
         {
-            var horas = 0;
-            var minutos = 0;
-            if (TempData["procedimento"] != null)
-			{
-                var procedimento = JsonConvert.DeserializeObject<Procedimento>(TempData["procedimento"].ToString());
-                horas = procedimento.Duracao / 60;
-                minutos = procedimento.Duracao % 60;
-
-                //var produtosId = produtos;
-                //if (produtosId != null)
-                //{
-                //    TempData["produtosSelecionados"] = JsonConvert.SerializeObject(_produtoRepository.ObterProdutosPorId(produtosId));
-                //}
-
-                PreencheHorasMinutos(horas, minutos);
-                return View(procedimento);
-            }   
-            TempData.Clear();
-
-            PreencheHorasMinutos(horas, minutos);
-            return View();
+            var procedimento = new Procedimento();
+            PreencheHorasMinutos();
+            return View(new ProcedimentoViewModel(_repository.ObterProdutos(pagina, procedimento.Id), procedimento));
         }
 
-        private void PreencheHorasMinutos(int horas, int minutos)
+        [HttpGet]
+        public IActionResult CadastrarRetorno(int? pagina)
+        {
+            var procedimento = JsonConvert.DeserializeObject<Procedimento>(TempData["procedimento"].ToString());
+            var horas = procedimento.Duracao / 60;
+            var minutos = procedimento.Duracao % 60;
+            PreencheHorasMinutos(horas, minutos);
+
+            var produtosSelecionados = JsonConvert.DeserializeObject<List<Produto>>(TempData["produtosSelecionados"].ToString());
+            procedimento.AdicionaProdutos(produtosSelecionados);
+            TempData.Clear();
+            
+            TempData["produtosSalvar"] = JsonConvert.SerializeObject(procedimento.Getprodutos(procedimento.Produtos));
+            return View(new ProcedimentoViewModel(_repository.ObterProdutosSelecionados(pagina, procedimento), procedimento));
+
+        }
+
+        private void PreencheHorasMinutos(int horas = 0, int minutos = 0)
         {
             var horasSelectList = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
             ViewBag.Horas = horasSelectList.Select(_ => _ != horas ? new SelectListItem(_.ToString(), _.ToString()) : new SelectListItem(_.ToString(), _.ToString(), true));
@@ -73,12 +72,12 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         }
 
         [HttpGet]
-        public IActionResult Atualizar(int id)
+        public IActionResult Atualizar(int? pagina, int id)
         {
             var horas = 0;
             var minutos = 0;
             var procedimento = _repository.ObterProcedimento(id);
-            if(procedimento.Duracao > 0)
+            if (procedimento.Duracao > 0)
             {
                 horas = procedimento.Duracao / 60;
                 minutos = procedimento.Duracao % 60;
@@ -86,7 +85,23 @@ namespace GlamCentral.Areas.Funcionario.Controllers
             }
 
             PreencheHorasMinutos(horas, minutos);
-            return View(procedimento);
+            return View(new ProcedimentoViewModel(_repository.ObterProdutosSelecionados(pagina, procedimento), procedimento));
+        }
+
+        [HttpGet]
+        public IActionResult AtualizarRetorno(int? pagina, int id)
+        {
+            var procedimento = JsonConvert.DeserializeObject<Procedimento>(TempData["procedimento"].ToString());
+            var horas = procedimento.Duracao / 60;
+            var minutos = procedimento.Duracao % 60;
+            PreencheHorasMinutos(horas, minutos);
+
+            var produtosSelecionados = JsonConvert.DeserializeObject<List<Produto>>(TempData["produtosSelecionados"].ToString());
+            procedimento.AdicionaProdutos(produtosSelecionados);
+            TempData.Clear();
+
+            TempData["produtosSalvar"] = JsonConvert.SerializeObject(procedimento.Getprodutos(procedimento.Produtos));
+            return View(new ProcedimentoViewModel(_repository.ObterProdutosSelecionados(pagina, procedimento), procedimento));
         }
 
         [ValidateHttpReferer]
@@ -104,14 +119,15 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         [HttpPost]
         public IActionResult Cadastrar([FromForm] Procedimento procedimento)
         {
-            var produtosSelecionados = JsonConvert.DeserializeObject<List<Produto>>(TempData["produtosSelecionados"].ToString());
+            var produtosSelecionados = JsonConvert.DeserializeObject<List<Produto>>(TempData["produtosSalvar"].ToString());
+            // Todo: tornar dinâmico
             procedimento.AdicionaProdutos(produtosSelecionados);
+            procedimento.Status = true;
 
             var horas = int.Parse(Request.Form["horas"]);
             var minutos = int.Parse(Request.Form["minutos"]);
             procedimento.InsereDuracao(horas, minutos);
 
-            ModelState.Remove("Id");
             if (ModelState.IsValid)
             {
                 _repository.Cadastrar(procedimento);
@@ -130,6 +146,15 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         [HttpPost]
         public IActionResult Atualizar([FromForm] Procedimento procedimento, int id)
         {
+            var produtosSelecionados = JsonConvert.DeserializeObject<List<Produto>>(TempData["produtosSalvar"].ToString());
+            // Todo: tornar dinâmico
+            procedimento.AdicionaProdutos(produtosSelecionados);
+            procedimento.Status = true;
+
+            var horas = int.Parse(Request.Form["horas"]);
+            var minutos = int.Parse(Request.Form["minutos"]);
+            procedimento.InsereDuracao(horas, minutos);
+
             if (ModelState.IsValid)
             {
                 //produto.Id = id;
@@ -150,15 +175,37 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         public IActionResult ListagemProdutos([FromForm] Procedimento procedimento, int? pagina, string pesquisa, string status = "True", string ordenacao = "A")
         {
             var produtosSelecionados = new List<int>();
-            if (procedimento.Produtos != null)
-			{
-                produtosSelecionados = procedimento.Produtos.Select(_ => _.Produto.Id).ToList();
-            }
-            
             var statusBool = Convert.ToBoolean(status);
             var a = new ProcedimentoViewModel(_produtoRepository.ObterTodosProdutos(pagina, pesquisa, ordenacao, statusBool), produtosSelecionados);
 
-            if(int.Parse(Request.Form["horas"]) > 0 && int.Parse(Request.Form["minutos"]) > 0)
+            if (int.Parse(Request.Form["horas"]) > 0 && int.Parse(Request.Form["minutos"]) > 0)
+            {
+                var horas = int.Parse(Request.Form["horas"]);
+                var minutos = int.Parse(Request.Form["minutos"]);
+                procedimento.InsereDuracao(horas, minutos);
+            }
+
+            TempData["procedimento"] = JsonConvert.SerializeObject(procedimento);
+
+            return View(a);
+        }
+
+        [HttpPost]
+        public IActionResult ListagemProdutosAtualizar([FromForm] Procedimento procedimento, int? pagina, string pesquisa, string status = "True", string ordenacao = "A")
+        {
+            var produtosSelecionados = new List<int>();
+            if (procedimento.Id > 0)
+            {
+                var procedimentoExistente = _repository.ObterProcedimento(procedimento.Id);
+                if (procedimentoExistente.Produtos != null)
+                {
+                    produtosSelecionados = procedimentoExistente.Produtos.Select(_ => _.Produto.Id).ToList();
+                }
+            }
+            var statusBool = Convert.ToBoolean(status);
+            var a = new ProcedimentoViewModel(_produtoRepository.ObterTodosProdutos(pagina, pesquisa, ordenacao, statusBool), produtosSelecionados);
+
+            if (int.Parse(Request.Form["horas"]) > 0 && int.Parse(Request.Form["minutos"]) > 0)
             {
                 var horas = int.Parse(Request.Form["horas"]);
                 var minutos = int.Parse(Request.Form["minutos"]);
@@ -175,18 +222,15 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         {
             var produtosId = Request.Form["produtoSelecionado"].Select(int.Parse).ToList();
             TempData["produtosSelecionados"] = JsonConvert.SerializeObject(_produtoRepository.ObterProdutosPorId(produtosId));
+            return RedirectToAction(nameof(CadastrarRetorno));
+        }
 
-            //var procedimento = new Procedimento();
-            //if (TempData["procedimento"] != null)
-            //{
-            //    procedimento = JsonConvert.DeserializeObject<Procedimento>(TempData["procedimento"].ToString());
-            //    if(procedimento.Id > 0)
-            //    {
-            //        return RedirectToAction(nameof(Atualizar), new { produtos = produtos });
-            //    }
-            //    return RedirectToAction(nameof(Cadastrar), new { produtos = produtos });
-            //}
-            return RedirectToAction(nameof(Cadastrar));
+        [HttpPost]
+        public IActionResult SalvarProdutosAtualizar()
+        {
+            var produtosId = Request.Form["produtoSelecionado"].Select(int.Parse).ToList();
+            TempData["produtosSelecionados"] = JsonConvert.SerializeObject(_produtoRepository.ObterProdutosPorId(produtosId));
+            return RedirectToAction(nameof(AtualizarRetorno));
         }
     }
 }

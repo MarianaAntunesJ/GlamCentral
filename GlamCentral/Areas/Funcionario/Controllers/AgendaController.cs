@@ -1,7 +1,9 @@
 ﻿using GlamCentral.Models;
+using GlamCentral.Models.ViewModels;
 using GlamCentral.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -156,6 +158,32 @@ namespace GlamCentral.Areas.Funcionario.Controllers
             }
             
 			return new JsonResult(null);
+        }
+
+        private void DadosAgenda(Agenda agenda)
+        {
+            TempData["Agenda"] = JsonConvert.SerializeObject(agenda);
+        }
+
+        [HttpPost]
+        public IActionResult ListagemClientes([FromForm] Agenda agenda, int? pagina, string pesquisa, string status = "True", string ordenacao = "A")
+        {
+            var produtosSelecionados = new List<int>();
+            var statusBool = Convert.ToBoolean(status);
+
+            DadosAgenda(agenda);
+
+            var a = new ClienteViewModel(_clienteRepository.ObterTodosClientes(pagina, pesquisa, ordenacao, statusBool));
+
+            return View(a);
+        }
+
+        [HttpPost]
+        public IActionResult SelecionaCliente(IEnumerable<string> id)
+        {
+            //var cliente = Request.Form["produtoSelecionado"].Select(int.Parse).ToList();
+            //TempData["produtosSelecionados"] = JsonConvert.SerializeObject(_produtoRepository.ObterProdutosPorId(produtosId));
+            return RedirectToAction(nameof(Cadastrar));
         }
         #endregion
     }

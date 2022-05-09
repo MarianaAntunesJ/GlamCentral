@@ -7,6 +7,9 @@ namespace GlamCentral.Models.ViewModels
     public class ProcedimentoViewModel
     {
         public IPagedList<Produto> Produtos { get; set; }
+        public Produto Produto { get; set; }
+        public IPagedList<Procedimento> Procedimentos { get; set; }
+        public Procedimento Procedimento { get; set; }
         public IList<int> ProdutosSelecionados { get; set; }
         public IList<Categoria> Categorias { get; set; }
 
@@ -23,7 +26,9 @@ namespace GlamCentral.Models.ViewModels
             private set { }
         }
 
-        public List<SelectListItem> Status
+        public bool Status { get; set; }
+
+        public List<SelectListItem> StatusList
         {
             get
             {
@@ -43,9 +48,14 @@ namespace GlamCentral.Models.ViewModels
         public ProcedimentoViewModel(IPagedList<Produto> produtos)
         {
             Produtos = produtos;
-        }        
+        }
 
-		public ProcedimentoViewModel(IPagedList<Produto> produtos, IList<int> produtosSelecionados) : this(produtos)
+        public ProcedimentoViewModel(Produto produto)
+        {
+            Produto = produto;
+        }
+
+        public ProcedimentoViewModel(IPagedList<Produto> produtos, IList<int> produtosSelecionados) : this(produtos)
 		{
 			ProdutosSelecionados = produtosSelecionados;
 		}
@@ -53,6 +63,21 @@ namespace GlamCentral.Models.ViewModels
         public ProcedimentoViewModel(IList<Categoria> categorias)
         {
             Categorias = categorias;
+        }
+
+        public ProcedimentoViewModel(IPagedList<Procedimento> procedimentos)
+        {
+            Procedimentos = procedimentos;
+        }
+
+        public ProcedimentoViewModel(Procedimento procedimento)
+        {
+            Procedimento = procedimento;
+        }
+
+        public ProcedimentoViewModel(IPagedList<Produto> produtos, Procedimento procedimento) : this(produtos)
+        {
+            Procedimento = procedimento;
         }
     }
 }

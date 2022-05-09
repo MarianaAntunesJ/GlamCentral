@@ -1,0 +1,92 @@
+﻿@model ProcedimentoViewModel
+
+@{
+	ViewData["Title"] = "Cadastrar Procedimento";
+	var procedimento = Model.Procedimento;
+    var produtos = Model.Produtos;
+}
+
+<div col-md-4>
+	<br />
+	<br />
+	<br />
+	@*<h1 class="title-generic">@ViewData["Title"]</h1>*@
+	<br />
+	<form asp-controller="Procedimento" asp-action="Cadastrar" method="post">
+		<input type="hidden" asp-for="@procedimento.Id" />
+		<div class="form-group">
+			<label asp-for="@procedimento.Nome"></label>
+			<input asp-for="@procedimento.Nome" class="form-control" placeholder="Digite o nome">
+			<span asp-validation-for="@procedimento.Nome" class="text-danger"></span>
+		</div>
+
+		<div class="form-group in-row col-md-50">
+			<div class="form-group col-md-2">
+				<label>hora</label>
+				<select name="horas" class="form-control" asp-items="@ViewBag.Horas">
+				</select>
+				<label>minuto</label>
+				<select name="minutos" class="form-control" asp-items="@ViewBag.Minutos">
+				</select>
+			</div>
+			<div class="form-group col-md-3">
+				<div style="margin-left: 30px;">
+					<div class="form-group col-md-35">
+						<label asp-for="@procedimento.Valor"></label>
+						<div class="input-group mb-12">
+							<div class="input-group-prepend">
+								<div class="input-group-text">R$</div>
+							</div>
+							<input asp-for="@procedimento.Valor" class="form-control dinheiro" onclick="$(this).mask('#.##0,00', { reverse: true });" />
+						</div>
+						<span asp-validation-for="@procedimento.Valor" class="text-danger"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		@if (produtos.Count > 0)
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead class="table-cabecalho">
+                        <tr>
+                            <th scope="col">@Html.DisplayNameFor(model => produtos.First().Id)</th>
+                            <th scope="col">@Html.DisplayNameFor(model => produtos.First().Nome)</th>
+                            <th scope="col">@Html.DisplayNameFor(model => produtos.First().Peso)</th>
+                            <th scope="col">@Html.DisplayNameFor(model => produtos.First().TipoPeso)</th>
+                            <th scope="col">@Html.DisplayNameFor(model => produtos.First().Quantidade)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Produto produto in produtos)
+                        {
+                            <tr>
+                                <th scope="row">@produto.Id</th>
+                                <td>@produto.Nome</td>
+                                <td>@produto.Peso</td>
+                                <td>@produto.TipoPeso</td>
+                                <td>@produto.Quantidade</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @Html.PagedListPager((IPagedList)Model.Produtos, pagina => Url.Action("Index", new { pagina = pagina }))
+        }
+        else
+        {
+            <span>Nenhum produto selecionado!</span>
+        }
+
+		<div class="form-group col-md-1" style="margin-left: 30px;">
+			<label asp-for="Status"><input asp-for="Status" type="checkbox" class="bigger-checkbox" checked="checked" /></label>
+		</div>
+		<button type="submit" asp-action="Cadastrar" asp-controller="Procedimento" class="btn btn-primary btn-default btn-blue">Salvar</button> <a asp-action="Index" class="btn btn-info">Voltar</a>
+		<div>
+			<button type="submit" style="margin-left: 400px;" asp-action="ListagemProdutos" asp-controller="Procedimento" class="btn btn-primary btn-default btn-green">Produtos</button>
+		</div>
+	</form>
+</div>
+

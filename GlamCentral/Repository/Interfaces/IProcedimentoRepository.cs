@@ -17,6 +17,8 @@ namespace GlamCentral.Repository.Interfaces
         IPagedList<Procedimento> ObterTodosProcedimentos(int? pagina, string pesquisa);
         IPagedList<Procedimento> ObterTodosProcedimentos(int? pagina, string pesquisa, string ordenacao);
         IPagedList<Procedimento> ObterTodosProcedimentos(int? pagina, string pesquisa, string ordenacao, bool status);
-        IPagedList<Produto> ObterTodosProdutos(int? pagina, string pesquisa, string ordenacao, bool status);
+        //IPagedList<Produto> ObterTodosProdutos(int? pagina, string pesquisa, string ordenacao, bool status);
+        IPagedList<Produto> ObterProdutos(int? pagina, int procedimentoId);
+        IPagedList<Produto> ObterProdutosSelecionados(int? pagina, Procedimento procedimento);
     }
 }
