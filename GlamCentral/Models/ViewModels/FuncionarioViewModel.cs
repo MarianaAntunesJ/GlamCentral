@@ -41,5 +41,10 @@ namespace GlamCentral.Models.ViewModels
         public FuncionarioViewModel()
         {
         }
+
+        public FuncionarioViewModel(IPagedList<Funcionario> funcionarios)
+        {
+            Funcionarios = funcionarios;
+        }
     }
 }

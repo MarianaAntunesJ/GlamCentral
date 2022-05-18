@@ -1,6 +1,5 @@
 ﻿using GlamCentral.Libraries.Language;
 using GlamCentral.Libraries.Validation;
-using GlamCentral.Models.Enums;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -29,6 +28,12 @@ namespace GlamCentral.Models
 
         [Display(Name = "Ativo")]
         public bool Status { get; set; }
+
+        [Display(Name = "Dependente")]
+        public bool IsDependente { get; set; }
+
+        [Display(Name = "Responsável")]
+        public Cliente Responsavel { get; set; }
 
         [EmailAddress(ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E_Email")]
         [EmailUnicoCliente]

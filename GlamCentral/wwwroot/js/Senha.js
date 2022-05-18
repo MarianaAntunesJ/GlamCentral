@@ -1,7 +1,7 @@
-﻿$(document).ready(function () {
-    RecuperarSenha();
-});
+﻿////$(document).ready(function () {
+////    RecuperarSenha();
+////});
 
-function GerarGraficoCategoria() {
-    google.charts.setOnLoadCallback(CarregaDados);
-}
+////function GerarGraficoCategoria() {
+////    google.charts.setOnLoadCallback(CarregaDados);
+////}

@@ -29,16 +29,14 @@ namespace GlamCentral.Models
 
         public string Description { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
         [Display(Name = "Data")]
         public DateTime Start { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:HH:mm}", ApplyFormatInEditMode = true)]
         [Display(Name = "Duração")]
-        [DataType(DataType.Time)]
         [Required(AllowEmptyStrings = true)]
-        public DateTime Duration { get; set; }
+        public int Duracao { get; set; }
 
         public string ThemeColor { get; set; }
         public bool IsFullDay { get; set; }

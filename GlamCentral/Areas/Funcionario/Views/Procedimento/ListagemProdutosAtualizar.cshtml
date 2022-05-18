@@ -19,10 +19,6 @@
 			<input type="search" onkeyup="Pesquisar()" name="pesquisa" style="font-size: 20px; padding: 20px; margin-right: 30px;" id="pesquisa" value="@pesquisa" class="form-control" placeholder="Digite o nome">
 		</div>
 	</form>
-
-	<div>
-		<a asp-action="Cadastrar" class="btn btn-primary btn-default btn-blue">Cadastrar Produto</a>
-	</div>
 	<br />
 
 	@if (TempData["MSG_S"] != null)
@@ -82,8 +78,6 @@
 							<th scope="col">@Html.DisplayNameFor(model => model.Produtos.First().Peso)</th>
 							<th scope="col">@Html.DisplayNameFor(model => model.Produtos.First().TipoPeso)</th>
 							<th scope="col">@Html.DisplayNameFor(model => model.Produtos.First().Quantidade)</th>
-							<th scope="col"></th>
-							<th scope="col"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -101,17 +95,6 @@
 								<td>@produto.Peso</td>
 								<td>@produto.TipoPeso</td>
 								<td>@produto.Quantidade</td>
-								<td><a asp-action="Atualizar" asp-route-id="@produto.Id" class="btn btn-secondary btn-default btn-orange">Editar</a></td>
-								<td>
-									@if (produto.Status)
-									{
-										<a asp-action="GerenciarStatus" asp-route-id="@produto.Id" class="btn btn-secondary btn-default btn-red">Desativar</a>
-									}
-									else
-									{
-										<a asp-action="GerenciarStatus" asp-route-id="@produto.Id" class="btn btn-secondary btn-default btn-light-green">Ativar</a>
-									}
-								</td>
 							</tr>
 						}
 					</tbody>

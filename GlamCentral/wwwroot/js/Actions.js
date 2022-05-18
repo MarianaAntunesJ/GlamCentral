@@ -5,8 +5,7 @@
         pesquisa.focus();
     }
 
-    Pergunta();
-    AjaxUploadImagemProduto();
+    Pergunta();    
     MudarOrdenacao();
     SelecionaDropDownOrd();
 });
@@ -77,61 +76,4 @@ function Redirecionar() {
     var URL = window.location.protocol + "//" + window.location.host + window.location.pathname;
     var URLComParametros = URL + "?pagina=" + Pagina + "&pesquisa=" + Pesquisa + "&ordenacao=" + Ordenacao + "&status=" + Status + "#ordenacao";
     window.location.href = URLComParametros;
-}
-
-function AjaxUploadImagemProduto() {
-    $(".img-upload").click(function () {
-        $(this).parent().parent().find(".input-file").click();
-    });
-
-    $(".btn-imagem-excluir").click(function () {
-        var campoHidden = $(this).parent().find("input[name=imagem]");
-        var imagem = $(this).parent().find(".img-upload");
-        var btnExcluir = $(this).parent().find(".btn-imagem-excluir");
-        var inputFile = $(this).parent().find(".input-file");
-
-        $.ajax({
-            type: "GET",
-            url: "/Funcionario/Imagem/Deletar?caminho=" + campoHidden.val(),
-            error: function () {
-            },
-            success: function (data) {
-                imagem.attr("src", "/img/imagem-padrao.png");
-                btnExcluir.addClass("btn-ocultar");
-                campoHidden.val("");
-                inputFile.val("");
-            }
-        })
-
-    });
-
-    $(".input-file").change(function () {
-        var formulario = new FormData();
-        var binario = $(this)[0].files[0];
-        formulario.append("file", binario);
-
-        var campoHidden = $(this).parent().find("input[name=imagem]");
-        var imagem = $(this).parent().find(".img-upload");
-        var btnExcluir = $(this).parent().find(".btn-imagem-excluir");
-
-        imagem.attr("src", "/img/loading.gif");
-
-        $.ajax({
-            type: "POST",
-            url: "/Funcionario/Imagem/Armazenar",
-            data: formulario,
-            contentType: false,
-            processData: false,
-            error: function () {
-                alert("Erro no envio do arquivo");
-                imagem.attr("src", "/img/imagem-padrao.png");
-            },
-            success: function (data) {
-                var caminho = data.caminho;
-                imagem.attr("src", caminho);
-                campoHidden.val(caminho);
-                btnExcluir.removeClass("btn-ocultar");
-            }
-        })
-    });
 }

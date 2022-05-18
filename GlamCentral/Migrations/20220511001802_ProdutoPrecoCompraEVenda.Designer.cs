@@ -4,14 +4,16 @@ using GlamCentral.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GlamCentral.Migrations
 {
     [DbContext(typeof(GCContext))]
-    partial class GCContextModelSnapshot : ModelSnapshot
+    [Migration("20220511001802_ProdutoPrecoCompraEVenda")]
+    partial class ProdutoPrecoCompraEVenda
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,16 +109,10 @@ namespace GlamCentral.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDependente")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<int?>("ResponsavelId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -125,8 +121,6 @@ namespace GlamCentral.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ResponsavelId");
 
                     b.ToTable("Clientes");
                 });
@@ -220,21 +214,13 @@ namespace GlamCentral.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("AgendamentoId")
+                    b.Property<int>("Agenda")
                         .HasColumnType("int");
 
-                    b.Property<string>("Desconto")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("FormaDePagamento")
+                    b.Property<int>("Valor")
                         .HasColumnType("int");
-
-                    b.Property<string>("Observacao")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AgendamentoId");
 
                     b.ToTable("Pagamentos");
                 });
@@ -355,15 +341,6 @@ namespace GlamCentral.Migrations
                     b.Navigation("CategoriaPai");
                 });
 
-            modelBuilder.Entity("GlamCentral.Models.Cliente", b =>
-                {
-                    b.HasOne("GlamCentral.Models.Cliente", "Responsavel")
-                        .WithMany()
-                        .HasForeignKey("ResponsavelId");
-
-                    b.Navigation("Responsavel");
-                });
-
             modelBuilder.Entity("GlamCentral.Models.Imagem", b =>
                 {
                     b.HasOne("GlamCentral.Models.Produto", "Produto")
@@ -373,17 +350,6 @@ namespace GlamCentral.Migrations
                         .IsRequired();
 
                     b.Navigation("Produto");
-                });
-
-            modelBuilder.Entity("GlamCentral.Models.Pagamento", b =>
-                {
-                    b.HasOne("GlamCentral.Models.Agenda", "Agendamento")
-                        .WithMany()
-                        .HasForeignKey("AgendamentoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Agendamento");
                 });
 
             modelBuilder.Entity("GlamCentral.Models.Produto", b =>

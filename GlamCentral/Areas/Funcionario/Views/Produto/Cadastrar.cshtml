@@ -1,99 +1,107 @@
 ﻿@model GlamCentral.Models.Produto
 @{
-    ViewData["Title"] = "Cadastrar Produto";
+	ViewData["Title"] = "Cadastrar Produto";
 }
 <div col-md-4>
-    <br />
-    <br />
-    <br />
-    <h1 class="title-generic">@ViewData["Title"]</h1>
-    <br />
-    <form method="post">
-        <div class="form-group in-row col-md-20">
-            <div class="form-group col-md-6">
-                <label asp-for="CategoriaId"></label>
-                <select asp-for="CategoriaId" class="form-control" asp-items="@ViewBag.Categorias">
-                    <option value="">Selecione</option>
-                </select>
-                <span asp-validation-for="CategoriaId" class="text-danger"></span>
-            </div>
+	<br />
+	<br />
+	<br />
+	<h1 class="title-generic">@ViewData["Title"]</h1>
+	<br />
+	<form method="post">
+		<div class="form-group in-row col-md-20">
+			<div class="form-group col-md-6">
+				<label asp-for="CategoriaId"></label>
+				<select asp-for="CategoriaId" class="form-control" asp-items="@ViewBag.Categorias">
+					<option value="">Selecione</option>
+				</select>
+				<span asp-validation-for="CategoriaId" class="text-danger"></span>
+			</div>
 
-            <div class="form-group col-md-6" style="margin-left: 50px;">
-                <label asp-for="Nome"></label>
-                <input asp-for="Nome" class="form-control" placeholder="Digite o nome" />
-                <span asp-validation-for="Nome" class="text-danger"></span>
-            </div>
-        </div>
+			<div class="form-group col-md-6" style="margin-left: 50px;">
+				<label asp-for="Nome"></label>
+				<input asp-for="Nome" class="form-control" placeholder="Digite o nome" />
+				<span asp-validation-for="Nome" class="text-danger"></span>
+			</div>
+		</div>
 
-        <div class="form-group in-row col-md-20">
-            <div class="form-group col-md-4">
-                <label asp-for="Peso"></label>
-                <input asp-for="Peso" class="form-control" onclick="$(this).mask('900,00', {reverse: true})" placeholder="0">
-                <span asp-validation-for="Peso" class="text-danger"></span>
-            </div>
-            <div class="form-group col-md-4" style="margin-left: 10px;">
-                <label asp-for="TipoPeso"></label>
-                <select asp-for="TipoPeso" class="form-control" asp-items="@ViewBag.TipoPeso">
-                    <option value="">Selecione</option>
-                </select>
-                <span asp-validation-for="TipoPeso" class="text-danger"></span>
-            </div>
-            <div class="form-group col-md-4">
-                <div class="col-md-4" style="margin-left: 30px;">
-                    <label asp-for="Quantidade"></label>
-                </div>
-                <div class="input-group mb-2">
-                    <div>
-                        <input asp-for="Quantidade" type="number" class="form-control" placeholder="0" />
-                    </div>
-                    <div class="input-group-prepend in-row">
-                        <div class="input-group-text">unid</div>
-                    </div>
-                </div>
-                <span asp-validation-for="Quantidade" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group col-md-2">
-            <label asp-for="Status"></label>
-            <input asp-for="Status" type="checkbox" class="bigger-checkbox" checked="checked" />
-        </div>
+		<div class="form-group in-row col-md-20">
+			<div class="form-group col-md-4">
+				<label asp-for="Peso"></label>
+				<input asp-for="Peso" class="form-control" onclick="$(this).mask('900,00', {reverse: true})" placeholder="0">
+				<span asp-validation-for="Peso" class="text-danger"></span>
+			</div>
+			<div class="form-group col-md-4" style="margin-left: 10px;">
+				<label asp-for="TipoPeso"></label>
+				<select asp-for="TipoPeso" class="form-control" asp-items="@ViewBag.TipoPeso">
+					<option value="">Selecione</option>
+				</select>
+				<span asp-validation-for="TipoPeso" class="text-danger"></span>
+			</div>
+			<div class="form-group col-md-4">
+				<div class="col-md-4" style="margin-left: 30px;">
+					<label asp-for="Quantidade"></label>
+				</div>
+				<div class="input-group mb-2">
+					<div>
+						<input asp-for="Quantidade" type="number" class="form-control" placeholder="0" />
+					</div>
+					<div class="input-group-prepend in-row">
+						<div class="input-group-text">unid</div>
+					</div>
+				</div>
+				<span asp-validation-for="Quantidade" class="text-danger"></span>
+			</div>
+		</div>
+		<div class="form-group col-md-2">
+			<label asp-for="Status"></label>
+			<input asp-for="Status" type="checkbox" class="bigger-checkbox" checked="checked" />
+		</div>
 
-        <br />
-        @{
-            var imagens = new List<Imagem>();
-            if (Model != null)
-                imagens = Model.Imagens.ToList();
-        }
-        <div class="row Imagens">
-            @for (int i = 0; i < 3; i++)
-            {
-                @if (imagens.ElementAtOrDefault(i) != null)
-                {
-                    <div class="col-md-2">
-                        <input type="file" class="input-file" />
-                        <div class="container-img-thumbnail">
-                            <span class="helper"></span><img src="@imagens.ElementAtOrDefault(i).Caminho" class="img-thumbnail img-upload" />
-                        </div>
-                        <div class="btn btn-danger btn-imagem-excluir">X</div>
-                        <input type="text" name="imagem" value="@imagens.ElementAtOrDefault(i).Caminho" />
-                    </div>
-                }
-                else
-                {
-                    <div class="col-md-2">
-                        <input type="file" class="input-file" />
-                        <div class="container-img-thumbnail">
-                            <span class="helper"></span><img src="~/img/imagem-padrao.png" class="img-thumbnail img-upload" />
-                        </div>
-                        <div class="btn btn-danger btn-imagem-excluir btn-ocultar">X</div>
-                        <input type="text" name="imagem" />
-                    </div>
-                }
-            }
-        </div>
-        <br />
-        <br />
+		<br />
+		@{
+			var imagens = new List<Imagem>();
+			if (Model != null)
+				imagens = Model.Imagens.ToList();
+		}
+		<div class="row Imagens">
 
-        <button type="submit" class="btn btn-primary btn-default btn-blue">Salvar</button> <a asp-action="Index" class="btn btn-info">Voltar</a>
-    </form>
+			@for (int i = 0; i < 2; i++)
+			{
+				<div class="col-md-4">
+
+					<input type="file" name="imagem[]" id="img-input" class="input-file" />
+					<img src="~/img/imagem-padrao.png" class="img-thumbnail img-upload" />
+					<button id="btn-img" class="btn" onclick="document.getElementById('img-input').click();">Selecionar</button>
+					<div class="btn btn-danger btn-imagem-excluir">X</div>
+				</div>
+				@if (imagens.ElementAtOrDefault(i) != null)
+				{
+					<div class="col-md-2">
+						<input type="file" name="imagem[]" id="img-input" class="input-file" />
+						<div class="container-img-thumbnail">
+							<span class="helper"></span><img src="@imagens.ElementAtOrDefault(i).Caminho" class="img-thumbnail img-upload" />
+						</div>
+						<div class="btn btn-danger btn-imagem-excluir">X</div>
+						<input type="text" name="imagem" value="@imagens.ElementAtOrDefault(i).Caminho" />
+					</div>
+				}
+				else
+				{
+					<div class="col-md-2">
+						<input type="file" name="imagem[]" id="img-input" class="input-file" />
+						<div class="container-img-thumbnail">
+							<span class="helper"></span><img src="~/img/imagem-padrao.png" class="img-thumbnail img-upload" />
+						</div>
+						<div class="btn btn-danger btn-imagem-excluir btn-ocultar">X</div>
+						<input type="text" name="imagem" />
+					</div>
+				}
+			}
+		</div>
+		<br />
+		<br />
+
+		<button type="submit" class="btn btn-primary btn-default btn-blue">Salvar</button> <a asp-action="Index" class="btn btn-info">Voltar</a>
+	</form>
 </div>

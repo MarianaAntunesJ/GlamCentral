@@ -1,6 +1,6 @@
-﻿navbarDropdownAgenda.onclick = function () {
-   window.location.href = "https://localhost:44375/Funcionario/Agenda/Index";
-};
+﻿////navbarDropdownAgenda.onclick = function () {
+////   window.location.href = "https://localhost:44375/Funcionario/Agenda/Index";
+////};
 
 /*btnSave.click(function () {
     var campoHidden = $(this).parent().find("input[name=imagem]");

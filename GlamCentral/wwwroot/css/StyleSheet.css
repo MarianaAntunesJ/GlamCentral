@@ -7,6 +7,18 @@
     font-size: 20px;
 }
 
+.out-of-range {
+    opacity: .4;
+}
+
+.out-of-range-before {
+    background: repeating-linear-gradient( -45deg, #606dbc, #606dbc 10px, #465298 10px, #465298 20px );
+}
+
+.out-of-range-after {
+    background: repeating-linear-gradient( 45deg, #606dbc, #606dbc 10px, #465298 10px, #465298 20px );
+}
+
 input[type="text"], input[type="number"] {
     font-size: 20px;
     padding: 5px 10px;
@@ -317,9 +329,9 @@ input[type="text"], input[type="number"] {
     vertical-align: middle;
 }
 
-.Imagens .input-file {
+/*.Imagens .input-file {
     display: none;
-}
+}*/
 
 .Imagens .img-upload {
     cursor: pointer;

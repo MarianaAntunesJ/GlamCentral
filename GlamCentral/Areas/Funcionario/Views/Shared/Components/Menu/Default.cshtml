@@ -49,6 +49,35 @@
 
             @if (funcionario.GetFuncionario()?.Cargo == (int)CargoFuncionario.Cabelereiro || funcionario.GetFuncionario()?.Cargo == (int)CargoFuncionario.Gerente)
             {
+                /*<li class="nav-item  @((ViewContext.RouteData.Values["controller"].ToString() == "Agenda"
+                                  && ViewContext.RouteData.Values["action"].ToString() == "Index") ? "menuSelected" : "")">
+                    <a class="nav-link active" asp-action="Index" asp-controller="Agenda"><i class="fas fa-calendar"></i> Agenda <span class="sr-only">(current)</span></a>
+                </li>*/
+
+                <li class="form-group in-row downText">
+                    <div class="dropdown-submenu">
+                        <a class="nav-link active @((ViewContext.RouteData.Values["controller"].ToString() == "Pagamento"
+                        && ViewContext.RouteData.Values["action"].ToString() == "Cadastrar") ? "menuSelected" : "")" asp-action="Cadastrar" asp-controller="Agenda" id="navbarDropdownAgenda" role="button" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-calendar"></i> Pagamento
+                        </a>
+                        <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                            @{
+                                var subMenu = new List<string> { "Cadastrar", "Relatórios" };
+
+                                foreach (var item in subMenu)
+                                {
+                                    @await Html.PartialAsync("Submenu/DropDown/Agenda.cshtml", new ViewDataDictionary(ViewData)
+                        {{"subMenu", item} })
+                                }
+                            }
+                        </ul>
+                    </div>
+                </li>
+            }
+
+            @if (funcionario.GetFuncionario()?.Cargo == (int)CargoFuncionario.Cabelereiro || funcionario.GetFuncionario()?.Cargo == (int)CargoFuncionario.Gerente)
+            {
                 /*<li class="nav-item  @((ViewContext.RouteData.Values["controller"].ToString() == "Procedimento"
                                   && ViewContext.RouteData.Values["action"].ToString() == "Index") ? "menuSelected" : "")">
                     <a class="nav-link active" asp-action="Index" asp-controller="Procedimento"><i class="fas fa-shower"></i> Procedimentos <span class="sr-only">(current)</span></a>

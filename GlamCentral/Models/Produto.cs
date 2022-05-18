@@ -38,6 +38,12 @@ namespace GlamCentral.Models
         [Range(0, 3, ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E_Quantidade")]
         public virtual ICollection<Imagem> Imagens { get; set; }
 
+        [Required(AllowEmptyStrings = true)]
+        public double PrecoVenda { get; set; }
+
+        [Required(AllowEmptyStrings = true)]
+        public double PrecoCompra { get; set; }
+
         public virtual List<ProdutosDeProcedimento> Procedimentos { get; set; }
         #endregion
 

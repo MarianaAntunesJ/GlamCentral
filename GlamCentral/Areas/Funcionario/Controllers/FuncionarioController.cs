@@ -122,15 +122,17 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         {
             // Todo: Pegar login do funcionario
             var funcionarioAutorizado = _loginFuncionario.GetFuncionario();
-            if(funcionarioAutorizado.Cargo != (int)CargoFuncionario.Gerente)
+            var funcionario = _repository.ObterFuncionario(id);
+
+            if (funcionarioAutorizado.Id != funcionario.Id)
             {
-                var funcionario = _repository.ObterFuncionario(id);
                 funcionario.Status = !funcionario.Status;
                 _repository.Atualizar(funcionario);
                 TempData["MSG_S"] = Mensagem.MSG_S;
                 return RedirectToAction(nameof(Index));
             }
-            return View();
+            TempData["MSG_S"] = Mensagem.MSG_E;
+            return RedirectToAction(nameof(Index));
         }
     }
 }

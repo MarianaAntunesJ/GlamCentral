@@ -1,102 +1,100 @@
 ﻿$(document).ready(function () {
-    google.charts.load('current', { packages: ['corechart', 'bar'] });
-    GerarGraficos();
+    AjaxUploadImagemProduto();
 });
 
-navbarDropdownProduto.onclick = function () {
-    window.location.href = "https://localhost:44375/Funcionario/Produto/Index";
-}
+//navbarDropdownProduto.onclick = function () {
+//    window.location.href = "https://localhost:44375/Funcionario/Produto/Index";
+//}
 
-function GerarGraficoCategoria() {
-    google.charts.setOnLoadCallback(CarregaDados);
-}
+const image_input = document.querySelector(".input-file");
 
-function GerarGraficoQuantidade() {
-    google.charts.setOnLoadCallback(CarregaDadosProdutoQuantidade);
-}
+image_input.addEventListener("change", function () {
+    //const reader = new FileReader();
+    //reader.addEventListener("load", () => {
+    //    const uploaded_image = reader.result;
+    //    document.querySelector(".img-upload").style.backgroundImage = `url(${uploaded_image})`;
+    //});
+    //reader.readAsDataURL(this.files[0]);
 
-function GerarGraficos() {
-    GerarGraficoCategoria();
-    GerarGraficoQuantidade();
-};
+    var formulario = new FormData();
+    var binario = $(this)[0].files[0];
+    formulario.append("file", binario);
 
-function CarregaDados() {
-    var categoriaId = document.getElementById("categoria").value;
-    var urlBase = window.location.protocol + "//" + window.location.host + window.location.pathname + "CategoriaJson?" + "categoriaId=" + categoriaId;
+    var campoHidden = $(this).parent().find("input[name=imagem]");
+    var imagem = $(this).parent().find(".img-upload");
+    var btnExcluir = $(this).parent().find(".btn-imagem-excluir");
+
+    imagem.attr("src", "/img/loading.gif");
+
     $.ajax({
-        url: urlBase,
-        dataType: "json",
-        type: "GET",
-        error: function (xhr, status, error) {
-            var err = eval("(" + xhr.responseText + ")");
-            toastr.error(err.message);
+        type: "POST",
+        url: "/Funcionario/Imagem/Armazenar",
+        data: formulario,
+        contentType: false,
+        processData: false,
+        error: function () {
+            alert("Erro no envio do arquivo");
+            imagem.attr("src", "/img/imagem-padrao.png");
         },
         success: function (data) {
-            GraficoProduto(data);
-            return false;
+            var caminho = data.caminho;
+            imagem.attr("src", caminho);
+            campoHidden.val(caminho);
+            btnExcluir.removeClass("btn-ocultar");
         }
-    });
-    return false;
-};
+    })
+});
 
-function CarregaDadosProdutoQuantidade() {
-    var min = document.getElementById("min").value;
-    var max = document.getElementById("max").value;
-    var urlBase = window.location.protocol + "//" + window.location.host + window.location.pathname + "QuantidadeJson?" + "min=" + min + "&max=" + max;
-    $.ajax({
-        url: urlBase,
-        dataType: "json",
-        type: "GET",
-        error: function (xhr, status, error) {
-            var err = eval("(" + xhr.responseText + ")");
-            toastr.error(err.message);
-        },
-        success: function (data) {
-            GraficoPorQuantidade(data);
-            return false;
-        }
-    });
-    return false;
-}
+function AjaxUploadImagemProduto() {
 
-function GraficoProduto(data) {
-    var dataArray = [
-        ['Nome', 'Quantidade']
-    ];
-    $.each(data, function (i, item) {
-        dataArray.push([item.nome, item.quantidade]);
-    });
-    var data = google.visualization.arrayToDataTable(dataArray);
-    var options = {
-        hAxis: {
-            title: 'Quantidade'
-        },
-        title: 'Total de Produtos na categoria selecionada',
-        chartArea: {
-            width: '50%'
-        }
-    };
-    var chart = new google.visualization.PieChart(document.getElementById('produtosCategorias'));
-    chart.draw(data, options);
-    return false;
-}
+    $(".btn-imagem-excluir").click(function () {
+        var campoHidden = $(this).parent().find("input[name=imagem]");
+        var imagem = $(this).parent().find(".img-upload");
+        var btnExcluir = $(this).parent().find(".btn-imagem-excluir");
+        var inputFile = $(this).parent().find(".input-file");
 
-function GraficoPorQuantidade(data) {
-    var dataArray = [
-        ['Produto', 'Quantidade']
-    ];
-    $.each(data, function (i, item) {
-        dataArray.push([item.nome, item.quantidade]);
+        $.ajax({
+            type: "GET",
+            url: "/Funcionario/Imagem/Deletar?caminho=" + campoHidden.val(),
+            error: function () {
+            },
+            success: function (data) {
+                imagem.attr("src", "/img/imagem-padrao.png");
+                btnExcluir.addClass("btn-ocultar");
+                campoHidden.val("");
+                inputFile.val("");
+            }
+        })
+
     });
-    var data = google.visualization.arrayToDataTable(dataArray);
-    var options = {
-        is3D: true,
-        title: 'Quantidade Total de Produtos',
-        chartArea: {
-            width: '50%'
-        }
-    };
-    var chart = new google.visualization.ColumnChart(document.getElementById('produtosQuantidade'));
-    chart.draw(data, options);
-    return false;
+
+    document.getElementById('img-input').change(function () {
+        var formulario = new FormData();
+        var binario = $(this)[0].files[0];
+        formulario.append("file", binario);
+
+        var campoHidden = $(this).parent().find("input[name=imagem]");
+        var imagem = $(this).parent().find(".img-upload");
+        var btnExcluir = $(this).parent().find(".btn-imagem-excluir");
+
+        imagem.attr("src", "/img/loading.gif");
+
+        $.ajax({
+            type: "POST",
+            url: "/Funcionario/Imagem/Armazenar",
+            data: formulario,
+            contentType: false,
+            processData: false,
+            error: function () {
+                alert("Erro no envio do arquivo");
+                imagem.attr("src", "/img/imagem-padrao.png");
+            },
+            success: function (data) {
+                var caminho = data.caminho;
+                imagem.attr("src", caminho);
+                campoHidden.val(caminho);
+                btnExcluir.removeClass("btn-ocultar");
+            }
+        })
+    });
 }
