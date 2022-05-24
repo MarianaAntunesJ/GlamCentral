@@ -23,9 +23,7 @@ namespace GlamCentral.Models.ViewModels
             private set { }
         }
 
-        public bool Status { get; set; }
-
-        public List<SelectListItem> StatusList
+        public List<SelectListItem> Status
         {
             get
             {

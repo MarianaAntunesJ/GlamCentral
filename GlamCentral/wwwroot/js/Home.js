@@ -5,10 +5,34 @@
         pesquisa.focus();
     }
 
-    Pergunta();    
+    Pergunta();
     MudarOrdenacao();
     SelecionaDropDownOrd();
 });
+
+navbarDropdownAgenda.onclick = function () {
+    window.location.href = "https://localhost:44375/Funcionario/Agenda/Index";
+};
+
+navbarDropdownPagamento.onclick = function () {
+    window.location.href = "https://localhost:44375/Funcionario/Pagamento/Index";
+};
+
+navbarDropdownProcedimento.onclick = function () {
+    window.location.href = "https://localhost:44375/Funcionario/Procedimento/Index";
+};
+
+navbarDropdownProduto.onclick = function () {
+    window.location.href = "https://localhost:44375/Funcionario/Produto/Index";
+};
+
+navbarDropdownCliente.onclick = function () {
+    window.location.href = "https://localhost:44375/Funcionario/Cliente/Index";
+};
+
+navbarDropdownFuncionario.onclick = function () {
+    window.location.href = "https://localhost:44375/Funcionario/Funcionario/Index";
+};
 
 
 function Pergunta() {

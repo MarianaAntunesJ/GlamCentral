@@ -1,5 +1,48 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model FuncionarioViewModel
+
 @{
+    ViewData["Title"] = "Cargos";
+}
+<br />
+<br />
+<br />
+<h1 class="title-generic">@ViewData["Title"]</h1>
+<br />
+<div>
+    <a asp-action="Cadastrar" class="btn btn-primary btn-default btn-blue">Cadastrar</a>
+</div>
+<br />
+
+@if (TempData["MSG_S"] != null)
+{
+    <p class="alert alert-success">@TempData["MSG_S"]</p>
+}
+<br />
+
+@if (Model.Cargos.Count > 0)
+{
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-cabecalho">
+                <tr>
+                    <th scope="col">@Html.DisplayNameFor(model => model.Cargos.FirstOrDefault())</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (CargoFuncionario cargo in Model.Cargos)
+                {
+                    <tr>
+                        <th scope="row">@cargo</th>
+                        <td><a asp-action="Atualizar" asp-route-id="@cargo" class="btn btn-secondary btn-default btn-orange">Editar</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <span>Nenhum registro encontrado!</span>
 }

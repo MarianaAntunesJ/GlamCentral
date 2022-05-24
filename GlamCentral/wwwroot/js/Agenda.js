@@ -1,8 +1,4 @@
-﻿////navbarDropdownAgenda.onclick = function () {
-////   window.location.href = "https://localhost:44375/Funcionario/Agenda/Index";
-////};
-
-/*btnSave.click(function () {
+﻿/*btnSave.click(function () {
     var campoHidden = $(this).parent().find("input[name=imagem]");
     var imagem = $(this).parent().find(".img-upload");
     var btnExcluir = $(this).parent().find(".btn-imagem-excluir");

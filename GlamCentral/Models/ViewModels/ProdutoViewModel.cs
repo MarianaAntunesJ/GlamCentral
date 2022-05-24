@@ -4,13 +4,10 @@ using X.PagedList;
 
 namespace GlamCentral.Models.ViewModels
 {
-    public class ProcedimentoViewModel
+    public class ProdutoViewModel
     {
         public IPagedList<Produto> Produtos { get; set; }
         public Produto Produto { get; set; }
-        public IPagedList<Procedimento> Procedimentos { get; set; }
-        public Procedimento Procedimento { get; set; }
-        public IList<int> ProdutosSelecionados { get; set; }
         public IList<Categoria> Categorias { get; set; }
 
         public List<SelectListItem> Ordenacao
@@ -39,43 +36,28 @@ namespace GlamCentral.Models.ViewModels
             private set { }
         }
 
-        public ProcedimentoViewModel()
+        public ProdutoViewModel()
         {
         }
 
-        public ProcedimentoViewModel(IPagedList<Produto> produtos)
+        public ProdutoViewModel(IPagedList<Produto> produtos)
         {
             Produtos = produtos;
         }
 
-        public ProcedimentoViewModel(Produto produto)
+        public ProdutoViewModel(Produto produto)
         {
             Produto = produto;
         }
 
-        public ProcedimentoViewModel(IPagedList<Produto> produtos, IList<int> produtosSelecionados) : this(produtos)
-		{
-			ProdutosSelecionados = produtosSelecionados;
-		}
-
-        public ProcedimentoViewModel(IList<Categoria> categorias)
+        public ProdutoViewModel(IList<Categoria> categorias)
         {
             Categorias = categorias;
         }
 
-        public ProcedimentoViewModel(IPagedList<Procedimento> procedimentos)
-        {
-            Procedimentos = procedimentos;
-        }
-
-        public ProcedimentoViewModel(Procedimento procedimento)
-        {
-            Procedimento = procedimento;
-        }
-
-        public ProcedimentoViewModel(IPagedList<Produto> produtos, Procedimento procedimento) : this(produtos)
-        {
-            Procedimento = procedimento;
-        }
-    }
+		public ProdutoViewModel(IPagedList<Produto> produtos, IList<Categoria> categorias) : this(produtos)
+		{
+			Categorias = categorias;
+		}
+	}
 }

@@ -33,7 +33,7 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         public IActionResult Index(int? pagina, string pesquisa, string status = "True", string ordenacao = "A")
         {
             var statusBool = Convert.ToBoolean(status);
-            return View(new IndexViewModel(_repository.ObterTodosFuncionarios(pagina, pesquisa, ordenacao, statusBool)));
+            return View(new FuncionarioViewModel(_repository.ObterTodosFuncionarios(pagina, pesquisa, ordenacao, statusBool)));
         }
 
         [HttpGet]

@@ -39,7 +39,7 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         {
             var statusBool = Convert.ToBoolean(status);
             var categorias = _categoriaRepository.ObterTodasCategorias();
-            return View(new IndexViewModel(_repository.ObterTodosProdutos(pagina, pesquisa, ordenacao, statusBool), categorias.ToList()));
+            return View(new ProdutoViewModel(_repository.ObterTodosProdutos(pagina, pesquisa, ordenacao, statusBool), categorias.ToList()));
         }
 
         [HttpGet]

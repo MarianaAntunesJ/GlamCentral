@@ -19,6 +19,8 @@ namespace GlamCentral.Models.ViewModels
         public Agenda Agendamento { get; set; }
         public Agenda AgendamentoSelecionado { get; set; }
 
+        public IList<Categoria> Categorias { get; set; }
+
         public List<SelectListItem> Ordenacao
         {
             get

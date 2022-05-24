@@ -1,16 +1,13 @@
-﻿using GlamCentral.Models.Enums;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using X.PagedList;
 
 namespace GlamCentral.Models.ViewModels
 {
-    public class FuncionarioViewModel
+    public class RelatorioViewModel
     {
-        public IPagedList<Funcionario> Funcionarios { get; set; }
-        public Funcionario Funcionario { get; set; }
-        public Funcionario FuncionarioSelecionado { get; set; }
-        public List<CargoFuncionario> Cargos { get; set; }
+        public Empresa Empresa { get; set; }
+        public IPagedList<Cliente> Clientes { get; set; }
 
         public List<SelectListItem> Ordenacao
         {
@@ -36,15 +33,6 @@ namespace GlamCentral.Models.ViewModels
                 };
             }
             private set { }
-        }
-
-        public FuncionarioViewModel()
-        {
-        }
-
-        public FuncionarioViewModel(IPagedList<Funcionario> funcionarios)
-        {
-            Funcionarios = funcionarios;
         }
     }
 }

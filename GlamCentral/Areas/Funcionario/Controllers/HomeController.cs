@@ -153,7 +153,7 @@ namespace GlamCentral.Areas.Funcionario.Controllers
             ViewBag.Data = DateTime.Now;
             var statusBool = Convert.ToBoolean(status);
             var empresa = _empresaRepository.ObterEmpresa();
-            return View(new IndexViewModel(_clienteRepository.ObterTodosClientes(pagina, ordenacao, statusBool), empresa));
+            return View(new HomeViewModel(_clienteRepository.ObterTodosClientes(pagina, ordenacao, statusBool), empresa));
         }
 
         [FuncionarioAutorizacao((int)CargoFuncionario.Gerente)]
