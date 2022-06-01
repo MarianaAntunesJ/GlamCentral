@@ -3,7 +3,7 @@
 @{
 	ViewData["Title"] = "Cadastrar Procedimento";
 	var procedimento = Model.Procedimento;
-    var produtos = Model.Produtos;
+    var produtos = Model.ProdutosList;
 }
 
 <div col-md-4>
@@ -73,7 +73,6 @@
                     </tbody>
                 </table>
             </div>
-            @Html.PagedListPager((IPagedList)Model.Produtos, pagina => Url.Action("Index", new { pagina = pagina }))
         }
         else
         {
@@ -81,7 +80,7 @@
         }
 
 		<div class="form-group col-md-1" style="margin-left: 30px;">
-			<label asp-for="Status"><input asp-for="Status" type="checkbox" class="bigger-checkbox" checked="checked" /></label>
+			<label asp-for="Status"><input asp-for="@procedimento.Status" type="checkbox" class="bigger-checkbox" checked="checked" /></label>
 		</div>
 		<button type="submit" asp-action="Cadastrar" asp-controller="Procedimento" class="btn btn-primary btn-default btn-blue">Salvar</button> <a asp-action="Index" class="btn btn-info">Voltar</a>
 		<div>

@@ -3,6 +3,7 @@ using GlamCentral.Libraries.Filter;
 using GlamCentral.Models.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace GlamCentral.Areas.Funcionario.Controllers
 {
@@ -11,9 +12,18 @@ namespace GlamCentral.Areas.Funcionario.Controllers
     public class ImagemController : Controller
     {
         [HttpPost]
-        public IActionResult Armazenar(IFormFile file)
+        public IActionResult Armazenar(IFormFile file, string imagem)
         {
+            var id = 1;
             var caminhoRetorno = GerenciadorArquivo.CadastrarImagemProduto(file);
+            if(id == 0)
+            {
+                TempData["CaminhoA"] = JsonConvert.SerializeObject(caminhoRetorno);
+            }
+            else
+            {
+                TempData["CaminhoB"] = JsonConvert.SerializeObject(caminhoRetorno);
+            }
 
             if (caminhoRetorno.Length > 0)
                 return Ok(new { caminho = caminhoRetorno });
@@ -21,12 +31,12 @@ namespace GlamCentral.Areas.Funcionario.Controllers
                 return new StatusCodeResult(500);
         }
 
-        public IActionResult Deletar(string caminho)
+        public IActionResult Deletar()
         {
+            var caminho = JsonConvert.DeserializeObject<string>(TempData["Caminho"]?.ToString());
             if (GerenciadorArquivo.ExcluirImagemProduto(caminho))
-                return Ok();
-            else
-                return BadRequest();
+                return Ok();            
+            return BadRequest();
         }
     }
 }

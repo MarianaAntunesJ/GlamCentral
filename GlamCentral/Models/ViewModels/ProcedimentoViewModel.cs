@@ -7,6 +7,7 @@ namespace GlamCentral.Models.ViewModels
     public class ProcedimentoViewModel
     {
         public IPagedList<Produto> Produtos { get; set; }
+        public List<Produto> ProdutosList { get; set; }
         public Produto Produto { get; set; }
         public IPagedList<Procedimento> Procedimentos { get; set; }
         public Procedimento Procedimento { get; set; }
@@ -77,5 +78,12 @@ namespace GlamCentral.Models.ViewModels
         {
             Procedimento = procedimento;
         }
+
+        public ProcedimentoViewModel(List<Produto> produtosList, Procedimento procedimento)
+        {
+            ProdutosList = produtosList;
+            Procedimento = procedimento;
+        }
+
     }
 }

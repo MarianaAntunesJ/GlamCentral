@@ -46,19 +46,18 @@ namespace GlamCentral.Repository
             var c = procedimento.Produtos.Select(_ => _.Produto.Id).ToList();
             var produtos = ObterProdutosPorId(c);
 
-
             procedimento.Produtos.Clear();
 
             procedimento.Produtos.AddRange(produtos.Select(_ => new ProdutosDeProcedimento(_, procedimento)));
 
-            foreach(var produto in produtos)
+            foreach (var produto in produtos)
             {
                 produto.Procedimentos.Add(new ProdutosDeProcedimento(produto, procedimento));
             }
 
             //produtos = produtos.Select(produto => produto.Procedimentos.Add(new ProdutosDeProcedimento(produto, procedimento)));
 
-            //_banco.Update(procedimento);
+            _banco.Update(procedimento);
             _banco.SaveChanges();
 
 
@@ -226,10 +225,8 @@ namespace GlamCentral.Repository
             return produtosSelecionados.ToPagedList<Produto>(NumeroPagina, registroPorPagina);
         }
 
-        public IPagedList<Produto> ObterProdutosSelecionados(int? pagina, Procedimento procedimento)
+        public List<Produto> ObterProdutosSelecionados(int? pagina, Procedimento procedimento)
         {
-            int registroPorPagina = _conf.GetValue<int>("RegistroPorPagina");
-            int NumeroPagina = pagina ?? 1;
 
             var produtosSelecionados = new List<Produto>();
             if (procedimento != null)
@@ -240,7 +237,7 @@ namespace GlamCentral.Repository
                 }
             }
 
-            return produtosSelecionados.ToPagedList<Produto>(NumeroPagina, registroPorPagina);
+            return produtosSelecionados;
         }
         #endregion
     }

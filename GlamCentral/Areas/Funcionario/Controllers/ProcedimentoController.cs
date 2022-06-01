@@ -43,7 +43,7 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         {
             var procedimento = new Procedimento();
             PreencheHorasMinutos();
-            return View(new ProcedimentoViewModel(_repository.ObterProdutos(pagina, procedimento.Id), procedimento));
+            return View(procedimento);
         }
 
         [HttpGet]
@@ -59,7 +59,7 @@ namespace GlamCentral.Areas.Funcionario.Controllers
             TempData.Clear();
             
             TempData["produtosSalvar"] = JsonConvert.SerializeObject(procedimento.Getprodutos(procedimento.Produtos));
-            return View(new ProcedimentoViewModel(_repository.ObterProdutosSelecionados(pagina, procedimento), procedimento));
+            return View(new ProcedimentoViewModel(produtosSelecionados, procedimento));
 
         }
 
@@ -122,7 +122,6 @@ namespace GlamCentral.Areas.Funcionario.Controllers
             var produtosSelecionados = JsonConvert.DeserializeObject<List<Produto>>(TempData["produtosSalvar"].ToString());
             // Todo: tornar dinâmico
             procedimento.AdicionaProdutos(produtosSelecionados);
-            procedimento.Status = true;
 
             var horas = int.Parse(Request.Form["horas"]);
             var minutos = int.Parse(Request.Form["minutos"]);

@@ -10,7 +10,7 @@ namespace GlamCentral.Libraries.Arquivo
         public static string CadastrarImagemProduto(IFormFile file)
         {
             var nomeArquivo = Path.GetFileName(file.FileName);
-            var caminho = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/temp", nomeArquivo);
+            var caminho = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/temp", nomeArquivo);            
 
             using (var stream = new FileStream(caminho, FileMode.Create))
             {

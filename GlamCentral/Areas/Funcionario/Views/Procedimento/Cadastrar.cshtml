@@ -1,23 +1,21 @@
-﻿@model ProcedimentoViewModel
+﻿@model Procedimento
 
 @{
 	ViewData["Title"] = "Cadastrar Procedimento";
-	var procedimento = Model.Procedimento;
-    var produtos = Model.Produtos;
 }
 
 <div col-md-4>
 	<br />
 	<br />
 	<br />
-	@*<h1 class="title-generic">@ViewData["Title"]</h1>*@
+	<h1 class="title-generic">@ViewData["Title"]</h1>
 	<br />
 	<form asp-controller="Procedimento" asp-action="Cadastrar" method="post">
-		<input type="hidden" asp-for="@procedimento.Id" />
+		<input type="hidden" asp-for="@Model.Id" />
 		<div class="form-group">
-			<label asp-for="@procedimento.Nome"></label>
-			<input asp-for="@procedimento.Nome" class="form-control" placeholder="Digite o nome">
-			<span asp-validation-for="@procedimento.Nome" class="text-danger"></span>
+			<label asp-for="@Model.Nome"></label>
+			<input asp-for="@Model.Nome" class="form-control" placeholder="Digite o nome">
+			<span asp-validation-for="@Model.Nome" class="text-danger"></span>
 		</div>
 
 		<div class="form-group in-row col-md-50">
@@ -32,14 +30,14 @@
 			<div class="form-group col-md-3">
 				<div style="margin-left: 30px;">
 					<div class="form-group col-md-35">
-						<label asp-for="@procedimento.Valor"></label>
+						<label asp-for="@Model.Valor"></label>
 						<div class="input-group mb-12">
 							<div class="input-group-prepend">
 								<div class="input-group-text">R$</div>
 							</div>
-							<input asp-for="@procedimento.Valor" class="form-control dinheiro" onclick="$(this).mask('#.##0,00', { reverse: true });" />
+							<input asp-for="@Model.Valor" class="form-control dinheiro" onclick="$(this).mask('#.##0,00', { reverse: true });" />
 						</div>
-						<span asp-validation-for="@procedimento.Valor" class="text-danger"></span>
+						<span asp-validation-for="@Model.Valor" class="text-danger"></span>
 					</div>
 				</div>
 			</div>

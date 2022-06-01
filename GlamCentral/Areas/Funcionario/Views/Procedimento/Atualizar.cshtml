@@ -3,14 +3,14 @@
 @{
     ViewData["Title"] = "Editar Procedimento";
     var procedimento = Model.Procedimento;
-    var produtos = Model.Produtos;
+    var produtos = Model.ProdutosList;
 }
 
 <div col-md-4>
     <br />
     <br />
     <br />
-    <h1 class="title-generic">@ViewData["Title"]</h1>
+    @*<h1 class="title-generic">@ViewData["Title"]</h1>*@
     <br />
     <form asp-controller="Procedimento" asp-action="Atualizar" method="post">
         <input type="hidden" asp-for="@procedimento.Id" />
@@ -74,7 +74,6 @@
                     </tbody>
                 </table>
             </div>
-            @Html.PagedListPager((IPagedList)Model.Produtos, pagina => Url.Action("Index", new { pagina = pagina }))
         }
         else
         {
@@ -83,7 +82,7 @@
 
         <div class="form-group col-md-1" style="margin-left: 30px;">
             <label asp-for="Status"></label>
-            <input asp-for="Status" type="checkbox" class="bigger-checkbox" checked="checked" />
+            <input asp-for="@procedimento.Status" type="checkbox" class="bigger-checkbox" checked="checked" />
         </div>
         <button type="submit" class="btn btn-primary btn-default btn-blue">Salvar</button> <a asp-action="Index" class="btn btn-info">Voltar</a>
     </form>

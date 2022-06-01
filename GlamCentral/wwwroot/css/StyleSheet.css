@@ -499,3 +499,22 @@ input[type="text"], input[type="number"] {
 }
 
 /*#endregion */
+
+/*#region Grafico */
+
+.only-print {
+    display: none !important;
+}
+
+@media print {
+
+    .no-print {
+        display: none !important;
+    }
+
+    .only-print {
+        display: block !important;
+    }
+}
+
+/*#endregion */

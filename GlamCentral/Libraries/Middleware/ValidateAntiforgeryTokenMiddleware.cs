@@ -23,8 +23,8 @@ namespace GlamCentral.Libraries.Middleware
             if (HttpMethods.IsPost(context.Request.Method)
                 && !(context.Request.Form.Files.Count == 1 && ajax))
             {
-                    await _antiforgery.ValidateRequestAsync(context);         
-            }               
+                await _antiforgery.ValidateRequestAsync(context);
+            }
             await _next(context);
         }
     }
