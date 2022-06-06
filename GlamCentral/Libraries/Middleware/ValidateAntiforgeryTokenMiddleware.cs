@@ -6,7 +6,9 @@ namespace GlamCentral.Libraries.Middleware
 {
     public class ValidateAntiforgeryTokenMiddleware
     {
+        // Define se próximo middleware é chamado
         private RequestDelegate _next;
+
         private IAntiforgery _antiforgery;
 
         public ValidateAntiforgeryTokenMiddleware(RequestDelegate next, IAntiforgery antiforgery)
@@ -23,8 +25,10 @@ namespace GlamCentral.Libraries.Middleware
             if (HttpMethods.IsPost(context.Request.Method)
                 && !(context.Request.Form.Files.Count == 1 && ajax))
             {
+                // Verifica Token
                 await _antiforgery.ValidateRequestAsync(context);
             }
+            // Permite passagem para o próximo
             await _next(context);
         }
     }

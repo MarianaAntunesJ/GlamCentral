@@ -57,7 +57,8 @@ namespace GlamCentral.Models
 
         public void InsereDuracao(int horas, int minutos)
         {
-            Duracao = minutos + (horas * 60);
+            if(horas >= 0 && minutos >= 0)
+                Duracao = minutos + (horas * 60);
         }
     }
 }

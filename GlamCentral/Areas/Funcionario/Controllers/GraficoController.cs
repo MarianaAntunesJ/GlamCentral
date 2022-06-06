@@ -25,7 +25,6 @@ namespace GlamCentral.Areas.Funcionario.Controllers
 
         // POST: GraficoController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
         {
             try
@@ -46,7 +45,6 @@ namespace GlamCentral.Areas.Funcionario.Controllers
 
         // POST: GraficoController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
         {
             try
@@ -67,7 +65,6 @@ namespace GlamCentral.Areas.Funcionario.Controllers
 
         // POST: GraficoController/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try

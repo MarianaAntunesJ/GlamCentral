@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31515.178
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlamCentral", "GlamCentral.csproj", "{122C5854-986C-4B80-858E-C4D0A36323E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlamCentralTests", "..\GlamCentralTests\GlamCentralTests.csproj", "{CA8EEC4F-D38E-496B-AD74-224D39A898AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{122C5854-986C-4B80-858E-C4D0A36323E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{122C5854-986C-4B80-858E-C4D0A36323E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{122C5854-986C-4B80-858E-C4D0A36323E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA8EEC4F-D38E-496B-AD74-224D39A898AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA8EEC4F-D38E-496B-AD74-224D39A898AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA8EEC4F-D38E-496B-AD74-224D39A898AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA8EEC4F-D38E-496B-AD74-224D39A898AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
