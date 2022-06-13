@@ -14,29 +14,45 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         [HttpPost]
         public IActionResult Armazenar(IFormFile file, string imagem)
         {
-            var id = 1;
-            var caminhoRetorno = GerenciadorArquivo.CadastrarImagemProduto(file);
-            if(id == 0)
-            {
-                TempData["CaminhoA"] = JsonConvert.SerializeObject(caminhoRetorno);
-            }
-            else
-            {
-                TempData["CaminhoB"] = JsonConvert.SerializeObject(caminhoRetorno);
-            }
-
-            if (caminhoRetorno.Length > 0)
-                return Ok(new { caminho = caminhoRetorno });
+            var caminho = GerenciadorArquivo.CadastrarImagemProduto(file);
+            SerializeCaminho(caminho, imagem);
+            if (caminho.Length > 0)
+                return Ok(new { caminho = caminho });
             else
                 return new StatusCodeResult(500);
         }
 
-        public IActionResult Deletar()
+        [HttpPost]
+        public IActionResult Deletar(string imagem)
         {
-            var caminho = JsonConvert.DeserializeObject<string>(TempData["Caminho"]?.ToString());
+            var caminho = DeserializeCaminho(imagem);
             if (GerenciadorArquivo.ExcluirImagemProduto(caminho))
-                return Ok();            
+                return Ok(new { caminho = caminho });            
             return BadRequest();
+        }
+
+        private void SerializeCaminho(string caminho, string imagem)
+        {
+            if (imagem == "0")
+            {
+                TempData["CaminhoA"] = JsonConvert.SerializeObject(caminho);
+            }
+            else
+            {
+                TempData["CaminhoB"] = JsonConvert.SerializeObject(caminho);
+            }
+        }
+
+        private string DeserializeCaminho(string imagem)
+        {
+            if (imagem == "0")
+            {
+                return JsonConvert.DeserializeObject<string>(TempData["CaminhoA"]?.ToString());
+            }
+            else
+            {
+                return JsonConvert.DeserializeObject<string>(TempData["CaminhoB"]?.ToString());
+            }
         }
     }
 }
