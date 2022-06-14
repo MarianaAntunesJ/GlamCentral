@@ -15,7 +15,6 @@ namespace GlamCentral.Libraries.Email
             _configuration = configuration;
         }
 
-
         public void EnviarSenhaParaColaboradorPorEmail(Funcionario funcionarios)
         {
             string corpoMsg = string.Format("<h2>Colaborador - Glam Central</h2>" +

@@ -35,7 +35,7 @@ input_fileA.change(function () {
             btnExcluir.removeClass("btn-ocultar");
         })
         .catch((error) => {
-            alert("Erro no envio do arquivo");
+            alert(error);
             imagem.attr("src", "/img/imagem-padrao.png");
         });
 });
@@ -89,8 +89,7 @@ function ExcluirA() {
     imagem.attr("src", "/img/loading.gif");
 
     fetch('/Funcionario/Imagem/Deletar', { method: "POST", body: formulario })
-        .then((response) => response.json())
-        .then((data) => {
+        .then(() => {
             imagem.attr("src", "/img/imagem-padrao.png");
             btnExcluir.addClass("btn-ocultar");
             inputFile.val("");
@@ -113,8 +112,7 @@ function ExcluirB() {
     imagem.attr("src", "/img/loading.gif");
 
     fetch('/Funcionario/Imagem/Deletar', { method: "POST", body: formulario })
-        .then((response) => response.json())
-        .then((data) => {
+        .then(() => {
             imagem.attr("src", "/img/imagem-padrao.png");
             btnExcluir.addClass("btn-ocultar");
             inputFile.val("");
