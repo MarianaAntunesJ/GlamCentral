@@ -4,6 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>GlamCentral</AssemblyName>
     <RootNamespace>GlamCentral</RootNamespace>
+    <UserSecretsId>05b919ea-d348-4b9d-814d-d730d90fe07f</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

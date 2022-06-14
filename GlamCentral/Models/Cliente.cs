@@ -26,14 +26,11 @@ namespace GlamCentral.Models
         [DataType(DataType.Date)]
         public DateTime DataNascimento { get; set; }
 
-        [Display(Name = "Ativo")]
-        public bool Status { get; set; }
-
-        [Display(Name = "Dependente")]
-        public bool IsDependente { get; set; }
-
         [Display(Name = "Responsável")]
         public Cliente Responsavel { get; set; }
+
+        [Display(Name = "Ativo")]
+        public bool Status { get; set; }        
 
         [EmailAddress(ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E_Email")]
         [EmailUnicoCliente]

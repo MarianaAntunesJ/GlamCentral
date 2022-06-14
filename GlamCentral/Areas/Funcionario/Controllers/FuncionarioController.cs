@@ -50,7 +50,7 @@ namespace GlamCentral.Areas.Funcionario.Controllers
             if (ModelState.IsValid)
             {
                 // Todo: fazer a verificação se o cadastro foi realizado antes
-                //_gerenciarEmail.EnviarSenhaParaColaboradorPorEmail(funcionario);
+                _gerenciarEmail.EnviarSenhaParaColaboradorPorEmail(funcionario);
 
                 funcionario.Senha = _loginFuncionario.GerarHashMd5(KeyGenerator.GetUniqueKey(8));
                 
