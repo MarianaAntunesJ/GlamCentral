@@ -1,0 +1,69 @@
+﻿@model AgendaViewModel
+
+<div class="modal-body">
+	<form class="col-md-12 form-horizontal">
+		<input type="hidden" id="hdEventID" value="0" />
+		<div class="form-group">
+			<label asp-for="Agendamento.Start"></label>
+			<input asp-for="Agendamento.Start" id="txtStart" class="form-control" asp-format="{0:dd-MM-yyyy}" value="@ViewBag.Data">
+			<span asp-validation-for="Agendamento.Start" class="text-danger"></span>
+			<label>hora</label>
+			<select id="Dthoras" class="form-control" asp-items="@ViewBag.Horas">
+				<option value="">Selecione ...</option>
+			</select>
+			<label>minuto</label>
+			<select id="Dtminutos" class="form-control" asp-items="@ViewBag.Minutos">
+				<option value="">Selecione ...</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label asp-for="Agendamento.FuncionarioId"></label>
+			<select asp-for="Agendamento.FuncionarioId" class="form-control" id="funcionarioSelected" asp-items="@ViewBag.Funcionarios">
+				<option value="">Selecione ...</option>
+			</select>
+			<span asp-validation-for="Agendamento.FuncionarioId" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="Agendamento.ClienteId"><button type="submit" style="margin-left: 400px;" asp-action="ListagemClientes" asp-controller="Agenda" class="btn btn-primary btn-default btn-green">Selecionar cliente</button></label>
+			@*<select asp-for="ClienteId" class="form-control" id="clienteSelected" asp-items="@ViewBag.Clientes">
+				<option value="">Selecione ...</option>
+				</select>
+				<span asp-validation-for="ClienteId" class="text-danger"></span>*@
+		</div>
+		<div class="form-group">
+			<label asp-for="Agendamento.ProcedimentoId"></label>
+			<select asp-for="Agendamento.ProcedimentoId" class="form-control" id="procedimentoSelected" onchange="duracao()" asp-items="@ViewBag.Procedimentos">
+				<option value="">Selecione ...</option>
+			</select>
+			<span asp-validation-for="Agendamento.ProcedimentoId" class="text-danger"></span>
+		</div>
+
+		<div class="form-group">
+			<div id="divDuration" style="display:none">
+				<label asp-for="Agendamento.Duracao"></label>
+				<input asp-for="Agendamento.Duracao" id="dtDuracao" class="form-control" value="">
+				<span asp-validation-for="Agendamento.Duracao" class="text-danger"></span>
+			</div>
+			<div class="checkbox">
+				<label><input type="checkbox" id="chkIsFullDay" checked="checked" />  Dia todo </label>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label>Descrição</label>
+			<textarea id="txtDescription" rows="3" class="form-control"></textarea>
+		</div>
+		<div class="form-group">
+			<label>Cor</label>
+			<select id="ddThemeColor" class="form-control">
+				<option value="">Padrão</option>
+				<option value="#F5AD98">Laranja</option>
+				<option value="#00DB78">Verde</option>
+				<option value="#FFF261">Amarelo</option>
+			</select>
+		</div>
+		<button type="button" id="btnSave" class="btn btn-success">Salvar</button>
+		<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+	</form>
+</div>
+<div><p>OIIIIIIIIIIIIIIII</p></div>

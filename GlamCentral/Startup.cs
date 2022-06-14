@@ -18,16 +18,23 @@ namespace GlamCentral
 {
     public class Startup
     {
+        #region Propriedade
+        public IConfiguration Configuration { get; } 
+        #endregion
+
+        #region Construtor
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
+        #endregion
 
-        public IConfiguration Configuration { get; }
-
+        #region Services
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpContextAccessor();
+
+            #region Entities Scopes
             services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
             services.AddScoped<IClienteRepository, ClienteRepository>();
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
@@ -36,56 +43,73 @@ namespace GlamCentral
             services.AddScoped<IImagemRepository, ImagemRepository>();
             services.AddScoped<IAgendaRepository, AgendaRepository>();
             services.AddScoped<IEmpresaRepository, EmpresaRepository>();
+            #endregion
 
+            #region Email Scope
             services.AddScoped<SmtpClient>(options =>
-            {
-                SmtpClient smtp = new SmtpClient()
                 {
-                    Host = Configuration.GetValue<string>("Email:ServerSMTP"),
-                    Port = Configuration.GetValue<int>("Email:ServerPort"),
-                    UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(Configuration.GetValue<string>("Email:Username"), Configuration.GetValue<string>("Email:Password")),
-                    EnableSsl = true
-                };
+                    SmtpClient smtp = new SmtpClient()
+                    {
+                        Host = Configuration.GetValue<string>("Email:ServerSMTP"),
+                        Port = Configuration.GetValue<int>("Email:ServerPort"),
+                        UseDefaultCredentials = false,
+                        Credentials = new NetworkCredential(Configuration.GetValue<string>("Email:Username"), Configuration.GetValue<string>("Email:Password")),
+                        EnableSsl = true
+                    };
 
-                return smtp;
-            });
+                    return smtp;
+                });
             services.AddScoped<GerenciarEmail>();
+            #endregion
 
+            #region Cache
             services.AddMemoryCache();
             services.AddSession(options =>
             {
             });
+            #endregion
 
+            #region Login Scope
             services.AddScoped<Sessao>();
             services.AddScoped<LoginFuncionario>();
+            #endregion
 
+            #region MVC
             services.AddControllersWithViews();
             services.AddMvc(_ =>
             {
                 _.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(_ => "O Campo deve ser preenchido!");
             });
+            #endregion
 
+            #region Database
             services.AddDbContext<GCContext>(options
-                => options.UseSqlServer(Configuration.GetConnectionString("GCContext")));
-        }
+                    => options.UseSqlServer(Configuration.GetConnectionString("GCContext")));
+            #endregion
+        } 
+        #endregion
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Se ambiente de desenvolvimento, mostrar mensagem de erro personalizado
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            // Se prod/homolog erro padrão
             else
             {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseStaticFiles();
             app.UseSession();
+
+            // Middleware criado para a utilização do AntiforgeryToken em todos os Forms
             app.UseMiddleware<ValidateAntiforgeryTokenMiddleware>();
 
             app.UseRouting();

@@ -1,0 +1,122 @@
+﻿@model ProcedimentoViewModel
+
+@{
+	ViewData["Title"] = "Selecionar produtos para procedimento";
+	var pesquisa = Context.Request.Query["pesquisa"];
+	var ordenacao = Context.Request.Query["ordenacao"];
+	var status = Context.Request.Query["status"];
+}
+
+<br />
+<br />
+<br />
+<h1 class="title-generic">@ViewData["Title"]</h1>
+<br />
+<div>
+	<form method="get">
+		<div class="form-group in-row">
+			<label for="pesquisa"></label>
+			<input type="search" onkeyup="Pesquisar()" name="pesquisa" style="font-size: 20px; padding: 20px; margin-right: 30px;" id="pesquisa" value="@pesquisa" class="form-control" placeholder="Digite o nome">
+		</div>
+	</form>
+	<br />
+
+	@if (TempData["MSG_S"] != null)
+	{
+		<p class="alert alert-success">@TempData["MSG_S"]</p>
+	}
+
+	<div class="in-row">
+		<div>
+			<a>Ordenar por: </a>
+			<select id="ordenacao" class="form-control ordenacao" asp-items="Model.Ordenacao"></select>
+		</div>
+		<div style="margin-left: 10px;">
+			<a>Filtrar por: </a>
+			<select id="status" class="form-control status" asp-items="Model.Status"></select>
+		</div>
+	</div>
+	<br />
+
+	<form asp-controller="Procedimento" asp-action="SalvarProdutosAtualizar" method="post">
+		<div class="form-group in-row">
+			@{
+				var todasCategorias = Model.Categorias;
+			}
+			@if (todasCategorias != null && todasCategorias.Count > 0)
+			{
+				<div class="dropdown">
+					<a class="nav-link dropdown-toggle  @((ViewContext.RouteData.Values["controller"].ToString() == "Categoria"
+                                  && ViewContext.RouteData.Values["action"].ToString() == "Index") ? "active" : "")" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+				   aria-haspopup="true" aria-expanded="false">
+						<i class="fas fa-list-ul"></i> Categorias
+					</a>
+					<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+						@{
+							var categoriasPrincipais = todasCategorias.Where(_ => _.CategoriaPaiID == null).ToList();
+							ViewData["todasCategorias"] = todasCategorias;
+						}
+						@foreach (var categoria in categoriasPrincipais)
+						{
+							@await Html.PartialAsync("../Shared/Components/Menu/_Submenu.cshtml", new ViewDataDictionary(ViewData)
+					{{"categoriaPai", categoria} })
+						}
+					</ul>
+				</div>
+			}
+		</div>
+
+		@if (Model.Produtos.Count > 0)
+		{
+			<div id="table" class="table-responsive">
+				<table class="table table-bordered table-striped table-hover">
+					<thead class="table-cabecalho">
+						<tr>
+							<th scope="col">Selecione</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.Produtos.First().Id)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.Produtos.First().Nome)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.Produtos.First().Peso)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.Produtos.First().TipoPeso)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.Produtos.First().Quantidade)</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (Produto produto in Model.Produtos)
+						{
+							<tr>
+								@if(Model.ProdutosSelecionados.Contains(produto.Id)){
+									<td><input type="checkbox" checked="checked" value="@produto.Id" name="produtoSelecionado"></td>
+								}
+								else{
+									<td><input type="checkbox" value="@produto.Id" name="produtoSelecionado"></td>
+								}
+								<th scope="row">@produto.Id</th>
+								<td>@produto.Nome</td>
+								<td>@produto.Peso</td>
+								<td>@produto.TipoPeso</td>
+								<td>@produto.Quantidade</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+
+			@Html.PagedListPager((IPagedList)Model.Produtos, pagina => Url.Action("Index", new { pagina = pagina, pesquisa = pesquisa, ordenacao = ordenacao }))
+
+		}
+		else
+		{
+			<span>Nenhum registro cadastrado!</span>
+		}
+
+		<div>
+			<button type="submit" class="btn btn-primary btn-default btn-blue">Salvar</button>
+		</div>
+		<div>
+			<a asp-action="Index" class="btn btn-info">Cancelar</a>
+		</div>
+	</form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="dist/jquery.simple-checkbox-table.min.js"></script>

@@ -1,98 +1,162 @@
-﻿$(document).ready(function () {
-    google.charts.load('current', { packages: ['corechart', 'bar'] });
-    GerarGraficos();
+﻿//navbarDropdownProduto.onclick = function () {
+//    window.location.href = "https://localhost:44375/Funcionario/Produto/Index";
+//}
+
+const input_fileA = $("#inputA");
+const input_fileB = $("#inputB");
+
+
+input_fileA.change(function () {
+
+    var formulario = new FormData();
+    var imagemId = 0;
+    formulario.append("imagem", imagemId);
+
+    var binario = $(this)[0].files[0];
+    formulario.append("file", binario);
+    
+    var token = $('input[name="__RequestVerificationToken"]').val();
+    formulario.append("__RequestVerificationToken", token);
+
+
+    var imagem = $("#img-inputA");
+    var btnExcluir = $("#btn-deleteA");
+
+    imagem.attr("src", "/img/loading.gif");
+
+    
+    fetch('/Funcionario/Imagem/Armazenar', { method: "POST", body: formulario })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            var caminho = data.caminho;
+            imagem.attr("src", caminho);
+            btnExcluir.removeClass("btn-ocultar");
+        })
+        .catch((error) => {
+            alert("Erro no envio do arquivo");
+            imagem.attr("src", "/img/imagem-padrao.png");
+        });
 });
 
-function GerarGraficoCategoria() {
-    google.charts.setOnLoadCallback(CarregaDados);
+input_fileB.change(function () {
+
+    var formulario = new FormData();
+    var imagemId = 1;
+    formulario.append("imagem", imagemId);
+
+    var binario = $(this)[0].files[0];
+    formulario.append("file", binario);
+
+    var token = $('input[name="__RequestVerificationToken"]').val();
+    formulario.append("__RequestVerificationToken", token);
+
+
+    var imagem = $("#img-inputB");
+    var btnExcluir = $("#btn-deleteB");
+
+    imagem.attr("src", "/img/loading.gif");
+
+
+    fetch('/Funcionario/Imagem/Armazenar', { method: "POST", body: formulario })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            var caminho = data.caminho;
+            imagem.attr("src", caminho);
+            btnExcluir.removeClass("btn-ocultar");
+        })
+        .catch((error) => {
+            alert("Erro no envio do arquivo");
+            imagem.attr("src", "/img/imagem-padrao.png");
+        });
+});
+
+function ExcluirA() {
+    var inputFile = $("#inputA");
+    var btnExcluir = $("#btn-deleteA");
+
+    var formulario = new FormData();
+    var imagemId = 0;
+    formulario.append("imagem", imagemId);
+
+    var token = $('input[name="__RequestVerificationToken"]').val();
+    formulario.append("__RequestVerificationToken", token);
+
+    var imagem = $("#img-inputA");
+    imagem.attr("src", "/img/loading.gif");
+
+    fetch('/Funcionario/Imagem/Deletar', { method: "POST", body: formulario })
+        .then((response) => response.json())
+        .then((data) => {
+            imagem.attr("src", "/img/imagem-padrao.png");
+            btnExcluir.addClass("btn-ocultar");
+            inputFile.val("");
+        })
 }
 
-function GerarGraficoQuantidade() {
-    google.charts.setOnLoadCallback(CarregaDadosProdutoQuantidade);
+function ExcluirB() {
+
+    var inputFile = $("#inputB");
+    var btnExcluir = $("#btn-deleteB");
+
+    var formulario = new FormData();
+    var imagemId = 1;
+    formulario.append("imagem", imagemId);
+
+    var token = $('input[name="__RequestVerificationToken"]').val();
+    formulario.append("__RequestVerificationToken", token);
+
+    var imagem = $("#img-inputB");
+    imagem.attr("src", "/img/loading.gif");
+
+    fetch('/Funcionario/Imagem/Deletar', { method: "POST", body: formulario })
+        .then((response) => response.json())
+        .then((data) => {
+            imagem.attr("src", "/img/imagem-padrao.png");
+            btnExcluir.addClass("btn-ocultar");
+            inputFile.val("");
+        })
 }
 
-function GerarGraficos() {
-    GerarGraficoCategoria();
-    GerarGraficoQuantidade();
-};
+//const boxes = document.querySelectorAll('.img-thumbnail');
 
-function CarregaDados() {
-    var categoriaId = document.getElementById("categoria").value;
-    var urlBase = window.location.protocol + "//" + window.location.host + window.location.pathname + "CategoriaJson?" + "categoriaId=" + categoriaId;
-    $.ajax({
-        url: urlBase,
-        dataType: "json",
-        type: "GET",
-        error: function (xhr, status, error) {
-            var err = eval("(" + xhr.responseText + ")");
-            toastr.error(err.message);
-        },
-        success: function (data) {
-            GraficoProduto(data);
-            return false;
-        }
-    });
-    return false;
-};
+//boxes.forEach(box => {
+//    box.addEventListener('click', function handleClick(event) {
+//        console.log('box clicked', event);
+//        alert("aaaaaaaaB")
+//        test(box.value)
+//    });
+//});
 
-function CarregaDadosProdutoQuantidade() {
-    var min = document.getElementById("min").value;
-    var max = document.getElementById("max").value;
-    var urlBase = window.location.protocol + "//" + window.location.host + window.location.pathname + "QuantidadeJson?" + "min=" + min + "&max=" + max;
-    $.ajax({
-        url: urlBase,
-        dataType: "json",
-        type: "GET",
-        error: function (xhr, status, error) {
-            var err = eval("(" + xhr.responseText + ")");
-            toastr.error(err.message);
-        },
-        success: function (data) {
-            GraficoPorQuantidade(data);
-            return false;
-        }
-    });
-    return false;
-}
+//function test(id) {
+//    console.log(id);
+//    var formulario = new FormData();
+//    var binario = $(this)[0].files[0];
+//    formulario.append("file", binario);
 
-function GraficoProduto(data) {
-    var dataArray = [
-        ['Nome', 'Quantidade']
-    ];
-    $.each(data, function (i, item) {
-        dataArray.push([item.nome, item.quantidade]);
-    });
-    var data = google.visualization.arrayToDataTable(dataArray);
-    var options = {
-        hAxis: {
-            title: 'Quantidade'
-        },
-        title: 'Total de Produtos na categoria selecionada',
-        chartArea: {
-            width: '50%'
-        }
-    };
-    var chart = new google.visualization.PieChart(document.getElementById('produtosCategorias'));
-    chart.draw(data, options);
-    return false;
-}
+//    var imagem = $(".img-input1");
+//    var btnExcluir = $(".btn-deleteA");
 
-function GraficoPorQuantidade(data) {
-    var dataArray = [
-        ['Produto', 'Quantidade']
-    ];
-    $.each(data, function (i, item) {
-        dataArray.push([item.nome, item.quantidade]);
-    });
-    var data = google.visualization.arrayToDataTable(dataArray);
-    var options = {
-        is3D: true,
-        title: 'Quantidade Total de Produtos',
-        chartArea: {
-            width: '50%'
-        }
-    };
-    var chart = new google.visualization.ColumnChart(document.getElementById('produtosQuantidade'));
-    chart.draw(data, options);
-    return false;
-}
+//    imagem.attr("src", "/img/loading.gif");
+
+//    $.ajax({
+//        type: "POST",
+//        url: "/Funcionario/Imagem/Armazenar",
+//        data: formulario,
+//        contentType: false,
+//        processData: false,
+//        success: function (data) {
+//            var caminho = data.caminho;
+//            imagem.attr("src", caminho);
+//            campoHidden.value = caminho;
+//            btnExcluir.removeClass("btn-ocultar");
+//        },
+//        error: function () {
+//            alert("Erro no envio do arquivo");
+//            imagem.attr("src", "/img/imagem-padrao.png");
+//        }
+//    })
+//}

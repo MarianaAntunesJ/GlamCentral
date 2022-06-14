@@ -15,21 +15,25 @@ namespace GlamCentral.Areas.Funcionario.Controllers
     [FuncionarioAutorizacao((int)CargoFuncionario.Gerente)]
     public class FuncionarioController : Controller
     {
+        #region "Propriedades Privadas"
         private IFuncionarioRepository _repository;
         private GerenciarEmail _gerenciarEmail;
         private LoginFuncionario _loginFuncionario;
+        #endregion
 
+        #region "Construtor"
         public FuncionarioController(IFuncionarioRepository respository, GerenciarEmail gerenciarEmail, LoginFuncionario loginFuncionario)
         {
             _repository = respository;
             _gerenciarEmail = gerenciarEmail;
             _loginFuncionario = loginFuncionario;
-        }
+        } 
+        #endregion
 
         public IActionResult Index(int? pagina, string pesquisa, string status = "True", string ordenacao = "A")
         {
             var statusBool = Convert.ToBoolean(status);
-            return View(new IndexViewModel(_repository.ObterTodosFuncionarios(pagina, pesquisa, ordenacao, statusBool)));
+            return View(new FuncionarioViewModel(_repository.ObterTodosFuncionarios(pagina, pesquisa, ordenacao, statusBool)));
         }
 
         [HttpGet]
@@ -118,15 +122,17 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         {
             // Todo: Pegar login do funcionario
             var funcionarioAutorizado = _loginFuncionario.GetFuncionario();
-            if(funcionarioAutorizado.Cargo != (int)CargoFuncionario.Gerente)
+            var funcionario = _repository.ObterFuncionario(id);
+
+            if (funcionarioAutorizado.Id != funcionario.Id)
             {
-                var funcionario = _repository.ObterFuncionario(id);
                 funcionario.Status = !funcionario.Status;
                 _repository.Atualizar(funcionario);
                 TempData["MSG_S"] = Mensagem.MSG_S;
                 return RedirectToAction(nameof(Index));
             }
-            return View();
+            TempData["MSG_S"] = Mensagem.MSG_E;
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -15,17 +15,21 @@ namespace GlamCentral.Areas.Funcionario.Controllers
     [FuncionarioAutorizacao((int)CargoFuncionario.Estoquista)]
     public class CategoriaController : Controller
     {
+        #region "Propriedades Privadas"
         private ICategoriaRepository _categoriaRepository;
+        #endregion
 
+        #region "Construtor"
         public CategoriaController(ICategoriaRepository categoriaRepository)
         {
             _categoriaRepository = categoriaRepository;
-        }
+        } 
+        #endregion
 
         public IActionResult Index(int? pagina, string pesquisa, string status = "True", string ordenacao = "A")
         {
             var statusBool = Convert.ToBoolean(status);
-            return View(new IndexViewModel(_categoriaRepository.ObterTodasCategorias(pagina, pesquisa, ordenacao, statusBool)));
+            return View(new CategoriaViewModel(_categoriaRepository.ObterTodasCategorias(pagina, pesquisa, ordenacao, statusBool)));
         }
 
         [HttpGet]

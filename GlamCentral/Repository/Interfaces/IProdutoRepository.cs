@@ -11,6 +11,7 @@ namespace GlamCentral.Repository.Interfaces
         void Excluir(int id);
         Produto ObterProduto(int id);
         List<Produto> ObterTodosProdutos();
+        IEnumerable<Produto> ObterProdutosPorId(List<int> ids);
         IEnumerable<Produto> ObterProdutosEntreQuantidade(int min, int max);
         IEnumerable<Produto> ObterTodosProdutos(int categoriaId);
         IPagedList<Produto> ObterTodosProdutos(int? pagina, string pesquisa);

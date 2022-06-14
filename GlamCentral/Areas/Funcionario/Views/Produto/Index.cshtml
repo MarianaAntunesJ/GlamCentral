@@ -1,4 +1,4 @@
-﻿@model IndexViewModel
+﻿@model ProdutoViewModel
 
 @{
     ViewData["Title"] = "Produtos";
@@ -83,6 +83,7 @@
                         <th scope="col">@Html.DisplayNameFor(model => model.Produtos.First().TipoPeso)</th>
                         <th scope="col">@Html.DisplayNameFor(model => model.Produtos.First().Quantidade)</th>
                         <th scope="col"></th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -94,6 +95,7 @@
                             <td>@produto.Peso</td>
                             <td>@produto.TipoPeso</td>
                             <td>@produto.Quantidade</td>
+                            <td><a asp-action="Atualizar" asp-route-id="@produto.Id" class="btn btn-secondary btn-default btn-orange">Editar</a></td>
                             <td>
                                 @if (produto.Status)
                                 {
@@ -103,7 +105,6 @@
                                 {
                                     <a asp-action="GerenciarStatus" asp-route-id="@produto.Id" class="btn btn-secondary btn-default btn-light-green">Ativar</a>
                                 }
-                                <a asp-action="Atualizar" asp-route-id="@produto.Id" class="btn btn-secondary btn-default btn-orange">Editar</a>
                             </td>
                         </tr>
                     }
@@ -119,3 +120,5 @@
         <span>Nenhum registro cadastrado!</span>
     }    
 </div>
+
+<partial name="_ProdutoImports.cshtml" />

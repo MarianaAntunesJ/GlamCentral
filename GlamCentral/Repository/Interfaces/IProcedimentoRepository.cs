@@ -13,8 +13,12 @@ namespace GlamCentral.Repository.Interfaces
         void Atualizar(Procedimento procedimento);
         void Excluir(int id);
         Procedimento ObterProcedimento(int id);
+        IEnumerable<Procedimento> ObterTodosProcedimentos();
         IPagedList<Procedimento> ObterTodosProcedimentos(int? pagina, string pesquisa);
         IPagedList<Procedimento> ObterTodosProcedimentos(int? pagina, string pesquisa, string ordenacao);
         IPagedList<Procedimento> ObterTodosProcedimentos(int? pagina, string pesquisa, string ordenacao, bool status);
+        //IPagedList<Produto> ObterTodosProdutos(int? pagina, string pesquisa, string ordenacao, bool status);
+        IPagedList<Produto> ObterProdutos(int? pagina, int procedimentoId);
+        List<Produto> ObterProdutosSelecionados(int? pagina, Procedimento procedimento);
     }
 }

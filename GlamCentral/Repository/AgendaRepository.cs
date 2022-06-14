@@ -1,58 +1,77 @@
-﻿using GlamCentral.Migrations;
+﻿using GlamCentral.Database;
+using GlamCentral.Models;
 using GlamCentral.Repository.Interfaces;
-using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using X.PagedList;
 
 namespace GlamCentral.Repository
 {
     public class AgendaRepository : IAgendaRepository
     {
-        public void Atualizar(Agenda cliente)
+        private IConfiguration _conf;
+
+        #region "Propriedades Privadas"
+        private GCContext _banco;
+        #endregion
+
+        #region "Construtor"
+        public AgendaRepository(GCContext banco, IConfiguration conf)
         {
-            throw new NotImplementedException();
+            _banco = banco;
+            _conf = conf;
+        }
+        #endregion
+
+
+        public bool Cadastrar(Agenda agenda)
+        {
+            if (ObterAgendamento(agenda.Id) == null)
+            {
+                _banco.Add(agenda);
+                _banco.SaveChanges();
+                return true;
+            }
+            else
+            {
+                Atualizar(agenda);
+                return true;
+            }
         }
 
-        public void Cadastrar(Agenda cliente)
+        public void Atualizar(Agenda agendaNova)
         {
-            throw new NotImplementedException();
+            if (agendaNova != null)
+            {
+                var local = _banco.Set<Agenda>()
+                    .Local
+                    .FirstOrDefault(_ => _.Id.Equals(agendaNova.Id));
+
+                if (local != null)
+                    _banco.Entry(local).State = EntityState.Detached;
+
+                _banco.Entry(agendaNova).State = EntityState.Modified;
+                _banco.SaveChanges();
+            }
         }
 
-        public void Excluir(int id)
+        public bool Excluir(int id)
         {
-            throw new NotImplementedException();
+            var agenda = ObterAgendamento(id);
+            if (agenda != null)
+            {
+                _banco.Remove(agenda);
+                _banco.SaveChanges();
+                return true;
+            }
+            return false;
         }
 
-        public Agenda ObterCliente(int id)
-        {
-            throw new NotImplementedException();
-        }
+        public Agenda ObterAgendamento(int id)
+        => _banco.Agenda.Find(id);
 
-        public List<Agenda> ObterClientePorEmail(string email)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Agenda> ObterTodosClientes()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IPagedList<Agenda> ObterTodosClientes(int? pagina, string pesquisa)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IPagedList<Agenda> ObterTodosClientes(int? pagina, string pesquisa, string ordenacao)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IPagedList<Agenda> ObterTodosClientes(int? pagina, string pesquisa, string ordenacao, bool status)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<Agenda> ObterTodosAgendamentos()
+        => _banco.Agenda;
     }
 }

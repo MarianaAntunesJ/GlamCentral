@@ -81,6 +81,9 @@ namespace GlamCentral.Repository
             return _banco.Funcionarios.Where(_ => _.Email == email).AsNoTracking().ToList();
         }
 
+        public IEnumerable<Funcionario> ObterTodosFuncionarios()
+            => _banco.Funcionarios;
+
         public IPagedList<Funcionario> ObterTodosFuncionarios(int? pagina, string pesquisa)
         {
             return ObterTodosFuncionarios(pagina, pesquisa, "A");

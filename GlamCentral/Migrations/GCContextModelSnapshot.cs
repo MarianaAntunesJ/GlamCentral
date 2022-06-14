@@ -26,25 +26,37 @@ namespace GlamCentral.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("End")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("Duracao")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FuncionarioId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsFullDay")
                         .HasColumnType("bit");
 
+                    b.Property<int>("ProcedimentoId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Start")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Subject")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ThemeColor")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
+
+                    b.HasIndex("FuncionarioId");
+
+                    b.HasIndex("ProcedimentoId");
 
                     b.ToTable("Agenda");
                 });
@@ -93,13 +105,18 @@ namespace GlamCentral.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDependente")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("ResponsavelId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -108,6 +125,8 @@ namespace GlamCentral.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ResponsavelId");
 
                     b.ToTable("Clientes");
                 });
@@ -201,13 +220,21 @@ namespace GlamCentral.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("Procedimento")
+                    b.Property<int>("AgendamentoId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Valor")
+                    b.Property<string>("Desconto")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FormaDePagamento")
                         .HasColumnType("int");
+
+                    b.Property<string>("Observacao")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AgendamentoId");
 
                     b.ToTable("Pagamentos");
                 });
@@ -219,16 +246,12 @@ namespace GlamCentral.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<string>("Duracao")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Duracao")
+                        .HasColumnType("int");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ProdutosId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -237,8 +260,6 @@ namespace GlamCentral.Migrations
                         .HasColumnType("real");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProdutosId");
 
                     b.ToTable("Procedimentos");
                 });
@@ -261,6 +282,12 @@ namespace GlamCentral.Migrations
                     b.Property<string>("Peso")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("PrecoCompra")
+                        .HasColumnType("float");
+
+                    b.Property<double>("PrecoVenda")
+                        .HasColumnType("float");
+
                     b.Property<int>("Quantidade")
                         .HasColumnType("int");
 
@@ -277,6 +304,48 @@ namespace GlamCentral.Migrations
                     b.ToTable("Produtos");
                 });
 
+            modelBuilder.Entity("GlamCentral.Models.ProdutosDeProcedimento", b =>
+                {
+                    b.Property<int>("ProdutoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProcedimentoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProdutoId", "ProcedimentoId");
+
+                    b.HasIndex("ProcedimentoId");
+
+                    b.ToTable("ProdutosDeProcedimento");
+                });
+
+            modelBuilder.Entity("GlamCentral.Models.Agenda", b =>
+                {
+                    b.HasOne("GlamCentral.Models.Cliente", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GlamCentral.Models.Funcionario", "Funcionario")
+                        .WithMany()
+                        .HasForeignKey("FuncionarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GlamCentral.Models.Procedimento", "Procedimento")
+                        .WithMany()
+                        .HasForeignKey("ProcedimentoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("Funcionario");
+
+                    b.Navigation("Procedimento");
+                });
+
             modelBuilder.Entity("GlamCentral.Models.Categoria", b =>
                 {
                     b.HasOne("GlamCentral.Models.Categoria", "CategoriaPai")
@@ -284,6 +353,15 @@ namespace GlamCentral.Migrations
                         .HasForeignKey("CategoriaPaiID");
 
                     b.Navigation("CategoriaPai");
+                });
+
+            modelBuilder.Entity("GlamCentral.Models.Cliente", b =>
+                {
+                    b.HasOne("GlamCentral.Models.Cliente", "Responsavel")
+                        .WithMany()
+                        .HasForeignKey("ResponsavelId");
+
+                    b.Navigation("Responsavel");
                 });
 
             modelBuilder.Entity("GlamCentral.Models.Imagem", b =>
@@ -297,15 +375,15 @@ namespace GlamCentral.Migrations
                     b.Navigation("Produto");
                 });
 
-            modelBuilder.Entity("GlamCentral.Models.Procedimento", b =>
+            modelBuilder.Entity("GlamCentral.Models.Pagamento", b =>
                 {
-                    b.HasOne("GlamCentral.Models.Produto", "Produtos")
+                    b.HasOne("GlamCentral.Models.Agenda", "Agendamento")
                         .WithMany()
-                        .HasForeignKey("ProdutosId")
+                        .HasForeignKey("AgendamentoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Produtos");
+                    b.Navigation("Agendamento");
                 });
 
             modelBuilder.Entity("GlamCentral.Models.Produto", b =>
@@ -319,9 +397,35 @@ namespace GlamCentral.Migrations
                     b.Navigation("Categoria");
                 });
 
+            modelBuilder.Entity("GlamCentral.Models.ProdutosDeProcedimento", b =>
+                {
+                    b.HasOne("GlamCentral.Models.Procedimento", "Procedimento")
+                        .WithMany("Produtos")
+                        .HasForeignKey("ProcedimentoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GlamCentral.Models.Produto", "Produto")
+                        .WithMany("Procedimentos")
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Procedimento");
+
+                    b.Navigation("Produto");
+                });
+
+            modelBuilder.Entity("GlamCentral.Models.Procedimento", b =>
+                {
+                    b.Navigation("Produtos");
+                });
+
             modelBuilder.Entity("GlamCentral.Models.Produto", b =>
                 {
                     b.Navigation("Imagens");
+
+                    b.Navigation("Procedimentos");
                 });
 #pragma warning restore 612, 618
         }

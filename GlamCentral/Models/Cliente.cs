@@ -1,6 +1,5 @@
 ﻿using GlamCentral.Libraries.Language;
 using GlamCentral.Libraries.Validation;
-using GlamCentral.Models.Enums;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -10,7 +9,6 @@ namespace GlamCentral.Models
     {
         #region "Propriedades Públicas"
         // Todo: refazer verificações: colocar as que faltam ou mudar de lugar
-        [Required(AllowEmptyStrings = false)]
         public int Id { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E_Obrigatorio")]
@@ -30,6 +28,12 @@ namespace GlamCentral.Models
 
         [Display(Name = "Ativo")]
         public bool Status { get; set; }
+
+        [Display(Name = "Dependente")]
+        public bool IsDependente { get; set; }
+
+        [Display(Name = "Responsável")]
+        public Cliente Responsavel { get; set; }
 
         [EmailAddress(ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E_Email")]
         [EmailUnicoCliente]

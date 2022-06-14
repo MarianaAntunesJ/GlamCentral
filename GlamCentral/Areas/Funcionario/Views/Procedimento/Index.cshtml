@@ -1,4 +1,4 @@
-﻿@model IndexViewModel
+﻿@model ProcedimentoViewModel
 
 @{
     ViewData["Title"] = "Procedimentos";
@@ -48,6 +48,7 @@
                     <th scope="col">@Html.DisplayNameFor(model => model.Procedimentos.First().Nome)</th>
                     <th scope="col">@Html.DisplayNameFor(model => model.Procedimentos.First().Duracao)</th>
                     <th scope="col"></th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -57,6 +58,7 @@
                         <th scope="row">@procedimento.Id</th>
                         <td>@procedimento.Nome</td>
                         <td>@procedimento.Duracao</td>
+                        <td><a asp-action="Atualizar" asp-route-id="@procedimento.Id" class="btn btn-secondary btn-default btn-orange">Editar</a></td>
                         <td>
                             @if (procedimento.Status)
                             {
@@ -66,7 +68,6 @@
                             {
                                 <a asp-action="GerenciarStatus" asp-route-id="@procedimento.Id" class="btn btn-secondary btn-default btn-light-green">Ativar</a>
                             }
-                            <a asp-action="Atualizar" asp-route-id="@procedimento.Id" class="btn btn-secondary btn-default btn-orange">Editar</a>
                         </td>
                     </tr>
                 }
@@ -81,3 +82,5 @@ else
 {
     <span>Nenhum registro cadastrado!</span>
 }
+
+<partial name="_ProcedimentoImports.cshtml" />

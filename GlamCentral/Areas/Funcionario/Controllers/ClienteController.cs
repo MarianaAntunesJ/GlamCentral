@@ -12,18 +12,22 @@ namespace GlamCentral.Areas.Funcionario.Controllers
     [FuncionarioAutorizacao((int)CargoFuncionario.Gerente)]
     public class ClienteController : Controller
     {
+        #region "Propriedades Privadas"
         private IClienteRepository _repository;
+        #endregion
 
+        #region "Construtor"
         public ClienteController(IClienteRepository respository)
         {
             _repository = respository;
-        }
+        } 
+        #endregion
 
 
         public IActionResult Index(int? pagina, string pesquisa, string status = "True", string ordenacao = "A")
         {
             var statusBool = Convert.ToBoolean(status);
-            return View(new IndexViewModel(_repository.ObterTodosClientes(pagina, pesquisa, ordenacao, statusBool)));
+            return View(new ClienteViewModel(_repository.ObterTodosClientes(pagina, pesquisa, ordenacao, statusBool)));
         }
 
         [HttpGet]

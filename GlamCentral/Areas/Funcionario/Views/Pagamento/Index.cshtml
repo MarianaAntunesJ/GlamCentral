@@ -1,0 +1,89 @@
+﻿@using GlamCentral.Models.Enum
+@model PagamentoViewModel
+    ViewData["Title"] = "Pagamento";
+}
+<div>
+    <br />
+    <br />
+    <br />
+    <h1 class="title-generic">@ViewData["Title"]</h1>
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="Agendamento.Id"></label>
+            <input asp-for="Agendamento.Id" class="form-control" placeholder="Digite o nome">
+            <span asp-validation-for="Agendamento.Id" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Agendamento.Cliente"></label>
+            <input asp-for="Agendamento.Cliente" class="form-control" onclick="$(this).mask('000.000.000-00');" placeholder="000.000.000-00">
+            <span asp-validation-for="Agendamento.Cliente" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Agendamento.Funcionario"></label>
+            <input asp-for="Agendamento.Funcionario" class="form-control" placeholder="dd/mm/aaaa">
+            <span asp-validation-for="Agendamento.Funcionario" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Agendamento.Procedimento"></label>
+            <input asp-for="Agendamento.Procedimento" class="form-control" onclick="$(this).mask('(00) 00000-0000')" placeholder="(00) 00000-0000">
+            <span asp-validation-for="Agendamento.Procedimento" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Procedimento.Valor"></label>
+            <input asp-for="Procedimento.Valor" type="checkbox" class="bigger-checkbox" checked="checked" />
+        </div>
+        <div class="form-group col-md-6" style="margin-left: 10px;">
+             <label asp-for="FormaPagamento"></label>
+             <select asp-for="FormaPagamento" class="form-control" asp-items="@Html.GetEnumSelectList<FormaPagamento>()">
+                 <option value="">Selecione ...</option>
+             </select>
+             <span asp-validation-for="FormaPagamento" class="text-danger"></span>
+         </div>
+        
+
+        <form asp-controller="Procedimento" asp-action="SalvarProdutos" method="post">
+		@if (Model.Produtos.Count > 0)
+		{
+			<div id="table" class="table-responsive">
+				<table class="table table-bordered table-striped table-hover">
+					<thead class="table-cabecalho">
+						<tr>
+							<th scope="col">Finalizados </th>
+							<th scope="col">@Html.DisplayNameFor(model => model.Produtos.First().Id)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.Produtos.First().Nome)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.Produtos.First().Peso)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.Produtos.First().TipoPeso)</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (Produto produto in Model.Produtos)
+						{
+							<tr>
+								@if(Model.ProdutosUtilizados.Contains(produto.Id)){
+									<td><input type="checkbox" checked="checked" value="@produto.Id" name="produtoSelecionado"></td>
+								}
+								else{
+									<td><input type="checkbox" value="@produto.Id" name="produtoSelecionado"></td>
+								}
+								<th scope="row">@produto.Id</th>
+								<td>@produto.Nome</td>
+								<td>@produto.Peso</td>
+								<td>@produto.TipoPeso</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+
+		}
+		else
+		{
+			<span>Nenhum produto utilizado.</span>
+		}
+	</form>
+
+        <button type="submit" class="btn btn-primary btn-blue">Salvar</button> <a asp-action="Index" class="btn btn-info">Voltar</a>
+    </form>
+</div>
+
+<partial name="_PagamentoImports.cshtml" />

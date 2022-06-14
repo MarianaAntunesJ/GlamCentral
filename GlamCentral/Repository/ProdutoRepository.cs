@@ -101,6 +101,11 @@ namespace GlamCentral.Repository
         {
             return _banco.Produtos.Where(_ => _.Quantidade >= min && _.Quantidade <= max);
         }
-        #endregion
-    }
+
+		public IEnumerable<Produto> ObterProdutosPorId(List<int> ids)
+		{
+            return _banco.Produtos.Where(_ => ids.Contains(_.Id));
+        }
+		#endregion
+	}
 }

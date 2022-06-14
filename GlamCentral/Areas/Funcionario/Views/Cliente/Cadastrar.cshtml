@@ -33,6 +33,16 @@
             <input asp-for="Status" type="checkbox" class="bigger-checkbox" checked="checked" />
         </div>
         <div class="form-group">
+            <label asp-for="IsDependente"></label>
+            <input asp-for="IsDependente" type="checkbox" class="bigger-checkbox" checked="checked" />
+            
+            <label asp-for="Responsavel"></label>
+			<select asp-for="Responsavel" class="form-control" id="responsavelSelected" asp-items="@ViewBag.Clientes">
+				<option value="">Selecione ...</option>
+			</select>
+			<span asp-validation-for="Responsavel" class="text-danger"></span>
+        </div>
+        <div class="form-group">
             <label asp-for="Email"></label>
             <input asp-for="Email" class="form-control" placeholder="exemplo@email.com">
             <span asp-validation-for="Email" class="text-danger"></span>
