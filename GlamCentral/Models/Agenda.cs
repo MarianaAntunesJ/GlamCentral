@@ -44,5 +44,18 @@ namespace GlamCentral.Models
         public Agenda()
         {
         }
-    }
+
+		public Agenda(int id, int clienteId, int funcionarioId, int procedimentoId, string description, DateTime start, 
+            string themeColor, bool isFullDay)
+		{
+			Id = id;
+			ClienteId = clienteId;
+			FuncionarioId = funcionarioId;
+			ProcedimentoId = procedimentoId;
+			Description = description;
+			Start = start;
+			ThemeColor = themeColor;
+			IsFullDay = isFullDay;
+		}
+	}
 }

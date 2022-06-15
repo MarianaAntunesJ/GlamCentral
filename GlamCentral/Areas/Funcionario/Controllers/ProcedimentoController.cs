@@ -119,6 +119,7 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         [HttpPost]
         public IActionResult Cadastrar([FromForm] Procedimento procedimento)
         {
+            // Todo: Cadadastrar proc sem produtos
             var produtosSelecionados = JsonConvert.DeserializeObject<List<Produto>>(TempData["produtosSalvar"].ToString());
             // Todo: tornar dinâmico
             procedimento.AdicionaProdutos(produtosSelecionados);
