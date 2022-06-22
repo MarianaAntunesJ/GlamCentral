@@ -195,9 +195,23 @@ $(document).ready(function () {
         //	}
         //}
 
-        var formulario = new FormData();
+        /*var formulario = new FormData();
 
-        var agendamento = {
+        var agendamentos = {
+            "agenda": {
+                "Id": $('#hdEventID').val(),
+                "ClienteId": $('#clienteSelected').val(),
+                "FuncionarioId": $('#funcionarioSelected').val(),
+                "ProcedimentoId": $('#procedimentoSelected').val(),
+                "Description": $('#txtDescription').val(),
+                "Start": $('#txtStart').val().trim(),
+                //Duracao: $('#chkIsFullDay').is(':checked') ? null : $('#dtDuracao').val().trim(),
+                "ThemeColor": $('#ddThemeColor').val(),
+                "IsFullDay": $('#chkIsFullDay').is(':checked')
+            }
+        };*/
+
+        /*var agendamentos = {
             Id: $('#hdEventID').val(),
             ClienteId: $('#clienteSelected').val(),
             FuncionarioId: $('#funcionarioSelected').val(),
@@ -207,30 +221,103 @@ $(document).ready(function () {
             //Duracao: $('#chkIsFullDay').is(':checked') ? null : $('#dtDuracao').val().trim(),
             ThemeColor: $('#ddThemeColor').val(),
             IsFullDay: $('#chkIsFullDay').is(':checked')
-        }
-        formulario.append("agendamento", agendamento);
+        };*/
+
+        var urlencoded = new URLSearchParams();
+        var token = $('input[name="__RequestVerificationToken"]').val();
+        urlencoded.append("__RequestVerificationToken", token);
+
+        /*var agendamentos = {
+            ClienteId: $('#clienteSelected').val(),
+            FuncionarioId: $('#funcionarioSelected').val()
+        };
+        urlencoded.append("agendamentos", agendamentos);*/
+
+        var id = $('#hdEventID').val();
+        urlencoded.append("id", id);
+
+        var clienteId = $('#clienteSelected').val();
+        urlencoded.append("clienteId", clienteId);
+
+        var funcionarioId = $('#funcionarioSelected').val();
+        urlencoded.append("funcionarioId", funcionarioId);
+
+        var procedimentoId = $('#procedimentoSelected').val();
+        urlencoded.append("procedimentoId", procedimentoId);
+
+        var description = $('#txtDescription').val();
+        urlencoded.append("description", description);
+
+        var start = $('#txtStart').val().trim();
+        urlencoded.append("start", start);
+
+        var themeColor = $('#ddThemeColor').val();
+        urlencoded.append("themeColor", themeColor);
+
+        var isFullDay = $('#chkIsFullDay').is(':checked');
+        urlencoded.append("isFullDay", isFullDay);
 
         var horasAgendamento = $('#Dthoras').val();
-        formulario.append("horasAgendamento", horasAgendamento);
+        urlencoded.append("horasAgendamento", horasAgendamento);
+
+        var horasAgendamento = $('#Dthoras').val();
+        urlencoded.append("horasAgendamento", horasAgendamento);
 
         var minutosAgendamento = $('#Dtminutos').val();
-        formulario.append("minutosAgendamento", minutosAgendamento);
+        urlencoded.append("minutosAgendamento", minutosAgendamento);
 
         var horasDuracao = $('#horasDuracao').val();
-        formulario.append("horasDuracao", horasDuracao);
+        urlencoded.append("horasDuracao", horasDuracao);
 
         var minutosDuracao = $('#minutosDuracao').val();
-        formulario.append("minutosDuracao", minutosDuracao);
+        urlencoded.append("minutosDuracao", minutosDuracao);
 
-        var token = $('input[name="__RequestVerificationToken"]').val();
-        formulario.append("__RequestVerificationToken", token);
-
-        SaveEvent(formulario);
+        SaveEvent(urlencoded);
         // call function for submit data to the server
+
+        /*var data = {
+            Id: $('#hdEventID').val(),
+            FuncionarioId: $('#funcionarioSelected').val(),
+            ClienteId: $('#clienteSelected').val(),
+            ProcedimentoId: $('#procedimentoSelected').val(),
+            Start: $('#txtStart').val().trim(),
+            //Duracao: $('#chkIsFullDay').is(':checked') ? null : $('#dtDuracao').val().trim(),
+            Description: $('#txtDescription').val(),
+            ThemeColor: $('#ddThemeColor').val(),
+            IsFullDay: $('#chkIsFullDay').is(':checked'),
+            Horas: $('#Dthoras').val(),
+            Minutos: $('#Dtminutos').val(),
+            HorasDuracao: $('#horasDuracao').val(),
+            MinutosDuracao: $('#minutosDuracao').val()
+        }
+        data.__RequestVerificationToken = $('input[name="__RequestVerificationToken"]').val();
+        SaveEvent(data);*/
     })
 
-    function SaveEvent(formulario) {
-        fetch('/Funcionario/Agenda/Cadastrar', { method: "POST", body: formulario })
+    /*function SaveEvent(data) {
+        $.ajax({
+            type: "POST",
+            url: '/Funcionario/Agenda/Cadastrar',
+            data: data,
+            success: function (status) {
+                if (status) {
+                    //Refresh the calender
+                    FetchEventAndRenderCalendar();
+                    $('#myModalSave').modal('hide');
+                }
+            },
+            error: function () {
+                alert('Failed');
+            }
+        })
+    }*/
+
+    function SaveEvent(urlencoded) {
+        fetch('/Funcionario/Agenda/Cadastrar', {
+            method: "POST",
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: urlencoded
+        })
             .then((response) => {
                 return response.json();
             })

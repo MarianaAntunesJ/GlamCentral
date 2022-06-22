@@ -102,14 +102,27 @@ namespace GlamCentral.Areas.Funcionario.Controllers
 
         #region "POST - Métodos Públicos"
         [HttpPost]
-        public JsonResult Cadastrar(Agenda agendamento, int horasAgendamento, int minutosAgendamento, 
+        public JsonResult Cadastrar(int clienteId, int funcionarioId, int procedimentoId, string description,
+            DateTime start, string themeColor, bool IsFullDay, int horasAgendamento, int minutosAgendamento, 
             int horasDuracao, int minutosDuracao)
         {
-            var status = false;
+            Agenda agendamento = new Agenda()
+			{
+                Cliente = _clienteRepository.ObterCliente(clienteId),
+                ClienteId = clienteId,
+                Funcionario = _funcionarioRepository.ObterFuncionario(funcionarioId),
+                FuncionarioId = funcionarioId,
+                Procedimento = _procedimentoRepository.ObterProcedimento(procedimentoId),
+                ProcedimentoId = procedimentoId,
+                Description = description,
+                ThemeColor = themeColor,
+                IsFullDay = IsFullDay,
+                Duracao = (horasDuracao * 60) + minutosDuracao,
+                Start = new DateTime(start.Year, start.Month, start.Day,
+                horasAgendamento, minutosAgendamento, 0)
 
-            agendamento.Duracao = (horasDuracao * 60) + minutosDuracao;
-            agendamento.Start = new DateTime(agendamento.Start.Year, agendamento.Start.Month, agendamento.Start.Day, 
-                horasAgendamento, minutosAgendamento, 0);
+            };
+            var status = true;
 
             if (ModelState.IsValid)
             {
