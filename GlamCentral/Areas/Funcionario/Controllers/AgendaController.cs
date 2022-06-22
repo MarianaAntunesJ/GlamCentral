@@ -43,7 +43,7 @@ namespace GlamCentral.Areas.Funcionario.Controllers
                 .Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
 
             ViewBag.Procedimentos = _procedimentoRepository.ObterTodosProcedimentos().OrderBy(_ => _.Nome)
-                .Select(a => new SelectListItem(a.Nome, a.Id.ToString()));                
+                .Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
 
             //ViewBag.Data = DateTime.Now.ToString("dd/MM/yyyy");
             ViewBag.Data = DateTime.Now;
@@ -102,16 +102,31 @@ namespace GlamCentral.Areas.Funcionario.Controllers
 
         #region "POST - Métodos Públicos"
         [HttpPost]
-        public JsonResult Cadastrar(Agenda agenda, int Horas, int Minutos, int HorasDuracao, int MinutosDuracao)
+        public JsonResult Cadastrar(int clienteId, int funcionarioId, int procedimentoId, string description,
+            DateTime start, string themeColor, bool IsFullDay, int horasAgendamento, int minutosAgendamento, 
+            int horasDuracao, int minutosDuracao)
         {
-            var status = false;
+            Agenda agendamento = new Agenda()
+			{
+                Cliente = _clienteRepository.ObterCliente(clienteId),
+                ClienteId = clienteId,
+                Funcionario = _funcionarioRepository.ObterFuncionario(funcionarioId),
+                FuncionarioId = funcionarioId,
+                Procedimento = _procedimentoRepository.ObterProcedimento(procedimentoId),
+                ProcedimentoId = procedimentoId,
+                Description = description,
+                ThemeColor = themeColor,
+                IsFullDay = IsFullDay,
+                Duracao = (horasDuracao * 60) + minutosDuracao,
+                Start = new DateTime(start.Year, start.Month, start.Day,
+                horasAgendamento, minutosAgendamento, 0)
 
-            agenda.Duracao = (HorasDuracao * 60) + MinutosDuracao;
-            agenda.Start = new DateTime(agenda.Start.Year, agenda.Start.Month, agenda.Start.Day, Horas, Minutos, 0);
-            ModelState.Remove("Id");
+            };
+            var status = true;
+
             if (ModelState.IsValid)
             {
-                if (_repository.Cadastrar(agenda))
+                if (_repository.Cadastrar(agendamento))
                     status = true;
             }
             else
@@ -140,28 +155,22 @@ namespace GlamCentral.Areas.Funcionario.Controllers
         }
 
         [HttpPost]
-        public JsonResult Duracao(IEnumerable<string> id)
-        {            
-            if (id.First() != null)
-			{
-                var idProc = int.Parse(id.First());
-
-                if (idProc != 0)
+        public JsonResult Duracao(string procedimentoId)
+        {
+            if (procedimentoId != null && int.Parse(procedimentoId) > 0)
+            {
+                var procedimento = _procedimentoRepository.ObterProcedimento(int.Parse(procedimentoId));
+                var duracao = procedimento.Duracao;
+                if (duracao > 0)
                 {
-                    var procedimento = _procedimentoRepository.ObterProcedimento(idProc);
-                    var duracao = procedimento.Duracao;
-                    if (duracao > 0)
-                    {
-                        var horas = duracao / 60;
-                        var minutos = duracao % 60;
-                        var duration = new List<int>() { horas, minutos};
-                        return new JsonResult(duration);
-                    }
-                        
+                    var horas = duracao / 60;
+                    var minutos = duracao % 60;
+                    var duration = new List<int>() { horas, minutos };
+                    return new JsonResult(duration);
                 }
+
             }
-            
-			return new JsonResult(null);
+            return new JsonResult("Procedimento não possui duração.");
         }
 
         #region Front-end escolhas entidades
@@ -228,7 +237,7 @@ namespace GlamCentral.Areas.Funcionario.Controllers
             var procedimentoId = int.Parse(id.First());
             TempData["ProcedimentoSelecionado"] = JsonConvert.SerializeObject(_procedimentoRepository.ObterProcedimento(procedimentoId));
             return RedirectToAction(nameof(Index));
-        } 
+        }
         #endregion
 
         #endregion
