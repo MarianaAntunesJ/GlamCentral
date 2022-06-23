@@ -45,29 +45,35 @@ namespace GlamCentral.Areas.Funcionario.Controllers
             ViewBag.Procedimentos = _procedimentoRepository.ObterTodosProcedimentos().OrderBy(_ => _.Nome)
                 .Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
 
-            //ViewBag.Data = DateTime.Now.ToString("dd/MM/yyyy");
             ViewBag.Data = DateTime.Now;
-            ViewBag.Data = "2022/05/10";
             PreencheHorasMinutos();
-            PreencheHorasMinutosDuracao();
             return View();
         }
 
-        private void PreencheHorasMinutos(int horas = 0, int minutos = 0)
+        private void PreencheHorasMinutos(string horas = "00", string minutos = "00")
         {
-            var horasSelectList = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-            ViewBag.Horas = horasSelectList.Select(_ => _ != horas ? new SelectListItem(_.ToString(), _.ToString()) : new SelectListItem(_.ToString(), _.ToString(), true));
-            var minutosSelectList = new List<int>() { 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55 };
-            ViewBag.Minutos = minutosSelectList.Select(_ => _ != minutos ? new SelectListItem(_.ToString(), _.ToString()) : new SelectListItem(_.ToString(), _.ToString(), true));
+            var horasSelectList = FormataHora();
+            ViewBag.Horas = horasSelectList.Select(_ => _ != horas ? new SelectListItem(_, _) : new SelectListItem(_, _, true));
+
+            var minutosSelectList = FormataMinuto();            
+            ViewBag.Minutos = minutosSelectList.Select(_ => _ != minutos ? new SelectListItem(_, _) : new SelectListItem(_, _, true));
         }
 
-        private void PreencheHorasMinutosDuracao(int horas = 0, int minutos = 0)
+        private IEnumerable<string> FormataHorario(int tamanho, int passo)
         {
-            var horasSelectList = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-            ViewBag.HorasDuracao = horasSelectList.Select(_ => _ != horas ? new SelectListItem(_.ToString(), _.ToString()) : new SelectListItem(_.ToString(), _.ToString(), true));
-            var minutosSelectList = new List<int>() { 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55 };
-            ViewBag.MinutosDuracao = minutosSelectList.Select(_ => _ != minutos ? new SelectListItem(_.ToString(), _.ToString()) : new SelectListItem(_.ToString(), _.ToString(), true));
+            var horarios = new List<string>();
+            for (int i = 0; i <= tamanho; i += passo)
+            {
+                horarios.Add(i.ToString("00"));
+            }
+            return horarios;
         }
+
+        private IEnumerable<string> FormataHora() 
+            => FormataHorario(23, 1);
+
+        private IEnumerable<string> FormataMinuto()
+            => FormataHorario(55, 5);
 
         public JsonResult Buscar(Agenda agenda)
         {
@@ -165,7 +171,7 @@ namespace GlamCentral.Areas.Funcionario.Controllers
                 {
                     var horas = duracao / 60;
                     var minutos = duracao % 60;
-                    var duration = new List<int>() { horas, minutos };
+                    var duration = new List<string>() { horas.ToString("00"), minutos.ToString("00") };
                     return new JsonResult(duration);
                 }
 

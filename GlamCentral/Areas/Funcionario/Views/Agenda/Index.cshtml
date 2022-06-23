@@ -9,7 +9,7 @@
 
 <form method="post">
 
-	<div id="calender"></div>
+	<div id="calender" onclick="horaAtual()"></div>
 
 	<div id="myModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
@@ -52,7 +52,7 @@
 				</div>
 				<div class="modal-body col-md-12 form-horizontal">
 					@Html.AntiForgeryToken()
-					<input type="hidden" id="hdEventID" value="0" />
+					<input type="hidden" id="hdEventID" value="0"/>
 					<div class="in-row">
 						<div>
 							<label>Data: </label>
@@ -95,12 +95,12 @@
 						</div>
 						<div>
 							<label>Horas: </label>
-							<select id="horasDuracao" class="form-control" asp-items="@ViewBag.HorasDuracao">
+							<select id="horasDuracao" class="form-control" asp-items="@ViewBag.Horas">
 							</select>
 						</div>
 						<div>
 							<label>Minutos: </label>
-							<select id="minutosDuracao" class="form-control" asp-items="@ViewBag.MinutosDuracao">
+							<select id="minutosDuracao" class="form-control" asp-items="@ViewBag.Minutos">
 							</select>
 						</div>
 						@*<div class="checkbox">
