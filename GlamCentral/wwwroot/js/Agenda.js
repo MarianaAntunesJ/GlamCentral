@@ -1,8 +1,8 @@
 ﻿/*btnSave.click(function () {
-    var campoHidden = $(this).parent().find("input[name=imagem]");
-    var imagem = $(this).parent().find(".img-upload");
-    var btnExcluir = $(this).parent().find(".btn-imagem-excluir");
-    var inputFile = $(this).parent().find(".input-file");
+    let campoHidden = $(this).parent().find("input[name=imagem]");
+    let imagem = $(this).parent().find(".img-upload");
+    let btnExcluir = $(this).parent().find(".btn-imagem-excluir");
+    let inputFile = $(this).parent().find(".input-file");
 
     $.ajax({
         type: "GET",
@@ -20,8 +20,8 @@
 });*/
 
 $(document).ready(function () {
-    var events = [];
-    var selectedEvent = null;
+    let events = [];
+    let selectedEvent = null;
 
     //selectOverlap: function(event) {
     //			return event.rendering === 'background';
@@ -81,7 +81,7 @@ $(document).ready(function () {
             eventClick: function (calEvent, jsEvent, view) {
                 selectedEvent = calEvent;
                 $('#myModal #eventTitle').text(calEvent.title);
-                var $description = $('<div />');
+                let $description = $('<div />');
                 $description.append($('<p />').html('<br /><br /><b>    Data: </b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
                 if (calEvent.end != null) {
                     $description.append($('<p/>').html('<b>    Duração: </b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
@@ -107,7 +107,7 @@ $(document).ready(function () {
             },
             editable: true,
             eventDrop: function (event) {
-                var data = {
+                let data = {
                     Id: event.id,
                     Subject: event.title,
                     Start: event.start.format('DD/MM/YYYY HH:mm A'),
@@ -127,7 +127,7 @@ $(document).ready(function () {
         $('#calendar').unselect()
     })
     $('#btnDelete').click(function () {
-        var data = { 'id': selectedEvent.Id };
+        let data = { 'id': selectedEvent.Id };
         data.__RequestVerificationToken = $('input[name="__RequestVerificationToken"]').val();
         if (selectedEvent != null) {
             $.ajax({
@@ -187,17 +187,17 @@ $(document).ready(function () {
         //	return;
         //}
         //else {
-        //	var startDate = moment($('#txtStart').val(), "DD/MM/YYYY HH:mm A").toDate();
-        //	var endDate = moment($('#dtDuracao').val(), "DD/MM/YYYY HH:mm A").toDate();
+        //	let startDate = moment($('#txtStart').val(), "DD/MM/YYYY HH:mm A").toDate();
+        //	let endDate = moment($('#dtDuracao').val(), "DD/MM/YYYY HH:mm A").toDate();
         //	if (startDate > endDate) {
         //		alert('Invalid end date');
         //		return;
         //	}
         //}
 
-        /*var formulario = new FormData();
+        /*let formulario = new FormData();
 
-        var agendamentos = {
+        let agendamentos = {
             "agenda": {
                 "Id": $('#hdEventID').val(),
                 "ClienteId": $('#clienteSelected').val(),
@@ -211,7 +211,7 @@ $(document).ready(function () {
             }
         };*/
 
-        /*var agendamentos = {
+        /*let agendamentos = {
             Id: $('#hdEventID').val(),
             ClienteId: $('#clienteSelected').val(),
             FuncionarioId: $('#funcionarioSelected').val(),
@@ -223,59 +223,56 @@ $(document).ready(function () {
             IsFullDay: $('#chkIsFullDay').is(':checked')
         };*/
 
-        var urlencoded = new URLSearchParams();
-        var token = $('input[name="__RequestVerificationToken"]').val();
+        let urlencoded = new URLSearchParams();
+        let token = $('input[name="__RequestVerificationToken"]').val();
         urlencoded.append("__RequestVerificationToken", token);
 
-        /*var agendamentos = {
+        /*let agendamentos = {
             ClienteId: $('#clienteSelected').val(),
             FuncionarioId: $('#funcionarioSelected').val()
         };
         urlencoded.append("agendamentos", agendamentos);*/
 
-        var id = $('#hdEventID').val();
+        let id = $('#hdEventID').val();
         urlencoded.append("id", id);
 
-        var clienteId = $('#clienteSelected').val();
+        let clienteId = $('#clienteSelected').val();
         urlencoded.append("clienteId", clienteId);
 
-        var funcionarioId = $('#funcionarioSelected').val();
+        let funcionarioId = $('#funcionarioSelected').val();
         urlencoded.append("funcionarioId", funcionarioId);
 
-        var procedimentoId = $('#procedimentoSelected').val();
+        let procedimentoId = $('#procedimentoSelected').val();
         urlencoded.append("procedimentoId", procedimentoId);
 
-        var description = $('#txtDescription').val();
+        let description = $('#txtDescription').val();
         urlencoded.append("description", description);
 
-        var start = $('#txtStart').val().trim();
+        let start = $('#txtStart').val().trim();
         urlencoded.append("start", start);
 
-        var themeColor = $('#ddThemeColor').val();
+        let themeColor = $('#ddThemeColor').val();
         urlencoded.append("themeColor", themeColor);
 
-        var isFullDay = $('#chkIsFullDay').is(':checked');
+        let isFullDay = $('#chkIsFullDay').is(':checked');
         urlencoded.append("isFullDay", isFullDay);
 
-        var horasAgendamento = $('#Dthoras').val();
+        let horasAgendamento = $('#Dthoras').val();
         urlencoded.append("horasAgendamento", horasAgendamento);
 
-        var horasAgendamento = $('#Dthoras').val();
-        urlencoded.append("horasAgendamento", horasAgendamento);
-
-        var minutosAgendamento = $('#Dtminutos').val();
+        let minutosAgendamento = $('#Dtminutos').val();
         urlencoded.append("minutosAgendamento", minutosAgendamento);
 
-        var horasDuracao = $('#horasDuracao').val();
+        let horasDuracao = $('#horasDuracao').val();
         urlencoded.append("horasDuracao", horasDuracao);
 
-        var minutosDuracao = $('#minutosDuracao').val();
+        let minutosDuracao = $('#minutosDuracao').val();
         urlencoded.append("minutosDuracao", minutosDuracao);
 
         SaveEvent(urlencoded);
         // call function for submit data to the server
 
-        /*var data = {
+        /*let data = {
             Id: $('#hdEventID').val(),
             FuncionarioId: $('#funcionarioSelected').val(),
             ClienteId: $('#clienteSelected').val(),
@@ -335,6 +332,7 @@ $(document).ready(function () {
 
     duracao();
     datas();
+    horaAtual();
 })
 
 function datas() {
@@ -346,13 +344,39 @@ function datas() {
     });
 }
 
-function duracao() {
-    var formulario = new FormData();
 
-    var procedimentoId = document.getElementById("procedimentoSelected").value;
+function horaAtual() {
+    var horario = defineProximoHorario();
+
+    document.querySelector('#Dthoras').value = ('0' + horario.getHours()).slice(-2);
+    document.querySelector('#Dtminutos').value = ('0' + horario.getMinutes()).slice(-2);
+}
+
+function defineProximoHorario() {
+    let dataHorarioAtual = new Date();
+    let ultimoCaracterMinuto = dataHorarioAtual.getMinutes().toString().slice(-1);
+
+    if (ultimoCaracterMinuto == 0 || ultimoCaracterMinuto == 5) {
+        return dataHorarioAtual;
+    }
+
+    if (ultimoCaracterMinuto < 5) {
+        dataHorarioAtual.setMinutes(dataHorarioAtual.getMinutes() + (5 - ultimoCaracterMinuto));
+        return dataHorarioAtual;
+    }
+
+    dataHorarioAtual.setMinutes(dataHorarioAtual.getMinutes() + (10 - ultimoCaracterMinuto));
+
+    return dataHorarioAtual;
+}
+
+function duracao() {
+    let formulario = new FormData();
+
+    let procedimentoId = document.getElementById("procedimentoSelected").value;
     formulario.append("procedimentoId", procedimentoId);
 
-    var token = $('input[name="__RequestVerificationToken"]').val();
+    let token = $('input[name="__RequestVerificationToken"]').val();
     formulario.append("__RequestVerificationToken", token);
 
     fetch('/Funcionario/Agenda/Duracao', { method: "POST", body: formulario })
