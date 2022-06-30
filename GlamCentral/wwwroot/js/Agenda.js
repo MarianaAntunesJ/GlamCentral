@@ -346,47 +346,28 @@ function datas() {
 
 
 function horaAtual() {
-    const horario = formataHora();
+    var horario = defineProximoHorario();
 
-    document.querySelector('#Dthoras').value = horario.hora;
-    document.querySelector('#Dtminutos').value = horario.minuto;
+    document.querySelector('#Dthoras').value = ('0' + horario.getHours()).slice(-2);
+    document.querySelector('#Dtminutos').value = ('0' + horario.getMinutes()).slice(-2);
 }
 
-function formatSaidaHoraMinuto(horas, minutos) {
-    return {
-        hora: horas,
-        minuto: minutos
-    };
-}
+function defineProximoHorario() {
+    let dataHorarioAtual = new Date();
+    let ultimoCaracterMinuto = dataHorarioAtual.getMinutes().toString().slice(-1);
 
-function formataHora() {
-    let horaAtual = new Date();
-    let horas = ('0' + horaAtual.getHours()).slice(-2);
-    let minutos = ('0' + horaAtual.getMinutes()).slice(-2);
-
-    let penultimoNumeroMinuto = minutos.slice(0, -1);
-
-    let horario = horas + ':' + minutos;
-
-    const naoTemQueAlterar = (/:[0-5](5|0)/g);
-    if (naoTemQueAlterar.test(horario)) {
-        return formatSaidaHoraMinuto(horas, minutos);
+    if (ultimoCaracterMinuto == 0 || ultimoCaracterMinuto == 5) {
+        return dataHorarioAtual;
     }
 
-    const alterarUltimoNumero = (/:[0-5][1-4]/g);
-    const alterarMinutos = (/:[^5][6-9]/g);
-    const alterarHoras = (/[0-2][0-3]:/g);
-    const zerarHoras = (/23:5[6-9]/g);
-    const zerarMinutos = (/:5[6-9]/g);
+    if (ultimoCaracterMinuto < 5) {
+        dataHorarioAtual.setMinutes(dataHorarioAtual.getMinutes() + (5 - ultimoCaracterMinuto));
+        return dataHorarioAtual;
+    }
 
-    horario = horario.replace(alterarUltimoNumero, ':' + penultimoNumeroMinuto + '5');
-    horario = horario.replace(alterarMinutos, ':' + (++penultimoNumeroMinuto) + '0');
-    horario = horario.replace(zerarHoras, "00:00");
-    horario = zerarMinutos.test(horario)
-        ? horario.replace(alterarHoras, (++horas) + ':').replace(zerarMinutos, ':00')
-        : horario;
-    
-    return formatSaidaHoraMinuto(horario.slice(0, 2), horario.slice(3, 5))
+    dataHorarioAtual.setMinutes(dataHorarioAtual.getMinutes() + (10 - ultimoCaracterMinuto));
+
+    return dataHorarioAtual;
 }
 
 function duracao() {
