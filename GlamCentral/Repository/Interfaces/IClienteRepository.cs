@@ -11,6 +11,7 @@ namespace GlamCentral.Repository.Interfaces
         void Excluir(int id);
 
         Cliente ObterCliente(int id);
+        IEnumerable<string> ObterClientesPorNome(string nomeTresCaracteres);
         IEnumerable<Cliente> ObterTodosClientes();
         List<Cliente> ObterClientePorEmail(string email);
         IPagedList<Cliente> ObterTodosClientes(int? pagina, string pesquisa);

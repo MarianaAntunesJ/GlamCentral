@@ -34,10 +34,8 @@
         </div>
         <div class="form-group">            
             <label asp-for="Responsavel"></label>
-			<select asp-for="Responsavel" class="form-control" id="responsavelSelected" asp-items="@ViewBag.Clientes">
-				<option value="">Selecione ...</option>
-			</select>
-			<span asp-validation-for="Responsavel" class="text-danger"></span>
+            <input list="clientes" name="cliente" id="responsavelSelected" onkeyup="DropDownPequisaResponsavel()">
+			<datalist id="clientes"></datalist>
         </div>
         <div class="form-group">
             <label asp-for="Email"></label>
@@ -47,3 +45,5 @@
         <button type="submit" class="btn btn-primary btn-blue">Salvar</button> <a asp-action="Index" class="btn btn-info">Voltar</a>
     </form>
 </div>
+
+<partial name="_ClienteImports.cshtml" />

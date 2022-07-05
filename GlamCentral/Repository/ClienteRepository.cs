@@ -47,6 +47,9 @@ namespace GlamCentral.Repository
         public Cliente ObterCliente(int id) 
             => _banco.Clientes.Find(id);
 
+        public IEnumerable<string> ObterClientesPorNome(string nomeTresCaracteres)
+            => _banco.Clientes.Where(_ => _.Nome.Substring(0, 3) == nomeTresCaracteres).Select(_ => _.Nome);
+
         public IEnumerable<Cliente> ObterTodosClientes() 
             => _banco.Clientes.ToList();        
 

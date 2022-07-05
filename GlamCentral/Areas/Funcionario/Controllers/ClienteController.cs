@@ -5,6 +5,7 @@ using GlamCentral.Models.ViewModels;
 using GlamCentral.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 
 namespace GlamCentral.Areas.Funcionario.Controllers
 {
@@ -79,6 +80,13 @@ namespace GlamCentral.Areas.Funcionario.Controllers
             _repository.Atualizar(cliente);
             TempData["MSG_S"] = Mensagem.MSG_S;
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public IActionResult BuscaClientes(string nomeTresCaracteres)
+        {
+          var clientes = _repository.ObterClientesPorNome(nomeTresCaracteres).ToList();
+         return Ok(clientes);
         }
     }
 }
